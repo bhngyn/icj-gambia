@@ -1,0 +1,2390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ICJ Genocide, Evidence &amp; Intent Explorer — The Gambia v. Myanmar (19 Nov 2026)</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Fonts: Inter for UI, EB Garamond for formal ICJ Judgment typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- PDF.js CDN (v3.11.174) for Local PDF Upload Mode -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            icj: {
+              navy: '#0f1e36',
+              navyDark: '#091324',
+              navyLight: '#1a2f52',
+              ivory: '#f7f6f2',
+              workspace: '#f4f6f9',
+              gold: '#f59e0b',
+              goldSoft: '#fef08a',
+            },
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+            serif: ['"EB Garamond"', 'Georgia', 'Cambria', 'serif'],
+          },
+        },
+      },
+    };
+  </script>
+
+  <style>
+    /* ===================================================================== */
+    /* FULL-VIEWPORT SHELL & SCROLLBAR REFINEMENT                            */
+    /* ===================================================================== */
+    html, body {
+      height: 100vh;
+      overflow: hidden;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f6f9;
+    }
+
+    ::-webkit-scrollbar {
+      width: 7px;
+      height: 7px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(15, 30, 54, 0.04);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(100, 116, 139, 0.38);
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(100, 116, 139, 0.62);
+    }
+
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    /* ===================================================================== */
+    /* STICKY SECTION QUICK-NAV PILLS                                        */
+    /* ===================================================================== */
+    .section-nav-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 11px;
+      border-radius: 9999px;
+      font-size: 11px;
+      font-weight: 600;
+      white-space: nowrap;
+      color: #475569;
+      background: #f1f5f9;
+      border: 1px solid #e2e8f0;
+      transition: all 0.15s ease;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .section-nav-pill:hover {
+      color: #0f1e36;
+      background: #fef3c7;
+      border-color: #f59e0b;
+    }
+    .section-nav-pill.active-section-pill {
+      background: #0f1e36;
+      color: #fef08a;
+      border-color: #0f1e36;
+      box-shadow: 0 2px 6px rgba(15, 30, 54, 0.22);
+    }
+
+    /* ===================================================================== */
+    /* RULING CARDS, INLINE CHIPS & QUICK JUMP PILLS                         */
+    /* ===================================================================== */
+    .ruling-card {
+      position: relative;
+      cursor: pointer;
+      transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease, background-color 0.16s ease;
+    }
+    .ruling-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px -6px rgba(15, 30, 54, 0.14), 0 2px 6px -1px rgba(245, 158, 11, 0.2);
+      border-color: #f59e0b !important;
+    }
+    .ruling-card.is-viewing {
+      border-color: #f59e0b !important;
+      box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.32), 0 8px 20px -4px rgba(245, 158, 11, 0.18);
+      background-color: #fffdf5;
+    }
+    .ruling-card.is-featured.is-viewing {
+      background-color: #0f1e36;
+      box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.65), 0 12px 24px -6px rgba(15, 30, 54, 0.4);
+    }
+    .ruling-card.card-flash {
+      animation: cardFlashPulse 1.1s ease-out;
+    }
+    @keyframes cardFlashPulse {
+      0% { box-shadow: 0 0 0 6px rgba(245, 158, 11, 0.6); }
+      100% { box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.32); }
+    }
+
+    .viewing-badge {
+      display: none;
+    }
+    .ruling-card.is-viewing .viewing-badge {
+      display: inline-flex;
+    }
+
+    .card-jump-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 9999px;
+      background: #fef3c7;
+      color: #92400e;
+      border: 1px solid #f59e0b;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .ruling-card:hover .card-jump-pill {
+      background: #f59e0b;
+      color: #0f1e36;
+    }
+    .ruling-card.is-viewing .card-jump-pill {
+      background: #0f1e36;
+      color: #fef08a;
+      border-color: #f59e0b;
+    }
+    .ruling-card.is-featured.is-viewing .card-jump-pill {
+      background: #f59e0b;
+      color: #0f1e36;
+    }
+
+    /* Inline Paragraph Citation Chips */
+    .para-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      font-family: Inter, sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 1px 7px;
+      margin: 0 1px;
+      border-radius: 5px;
+      background: #fef3c7;
+      color: #78350f;
+      border: 1px solid #f59e0b;
+      cursor: pointer;
+      vertical-align: baseline;
+      transition: all 0.14s ease;
+    }
+    .para-chip:hover {
+      background: #f59e0b;
+      color: #0f1e36;
+      transform: translateY(-1px);
+    }
+    .para-chip.active-chip {
+      background: #0f1e36;
+      color: #fef08a;
+      border-color: #f59e0b;
+    }
+
+    /* Quick Jump Bar Pills */
+    .quick-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 10px;
+      border-radius: 9999px;
+      font-size: 11px;
+      font-weight: 600;
+      white-space: nowrap;
+      border: 1px solid rgba(254, 240, 138, 0.28);
+      background: rgba(26, 47, 82, 0.85);
+      color: #e2e8f0;
+      transition: all 0.14s ease;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .quick-pill:hover {
+      background: rgba(245, 158, 11, 0.25);
+      border-color: #f59e0b;
+      color: #fef08a;
+    }
+    .quick-pill.active-pill {
+      background: #f59e0b;
+      color: #0f1e36;
+      border-color: #fef08a;
+      font-weight: 700;
+      box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.35);
+    }
+
+    /* ===================================================================== */
+    /* A4 ANNOTATED ICJ JUDGMENT PAGES & SPOTLIGHT HIGHLIGHTING              */
+    /* ===================================================================== */
+    .icj-page {
+      width: 100%;
+      max-width: 740px;
+      min-height: 980px;
+      background: #ffffff;
+      color: #0f172a;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.38), 0 1px 4px rgba(0, 0, 0, 0.18);
+      border-radius: 4px;
+      position: relative;
+      font-family: 'EB Garamond', Georgia, serif;
+      line-height: 1.66;
+      box-sizing: border-box;
+    }
+
+    .pdf-para {
+      position: relative;
+      padding: 8px 10px;
+      margin: 0 -10px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .pdf-para:hover {
+      background-color: rgba(254, 240, 138, 0.32);
+    }
+    .pdf-para.pdf-para-active {
+      background-color: rgba(254, 240, 138, 0.88);
+      box-shadow: inset 3px 0 0 #d97706, 0 0 0 2px rgba(245, 158, 11, 0.45);
+    }
+    .pdf-para.spotlight-pulse {
+      animation: pdfSpotlightPulse 1.35s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    @keyframes pdfSpotlightPulse {
+      0% {
+        background-color: #f59e0b;
+        box-shadow: inset 4px 0 0 #0f1e36, 0 0 0 8px rgba(245, 158, 11, 0.5);
+      }
+      50% {
+        background-color: #fef08a;
+        box-shadow: inset 3px 0 0 #d97706, 0 0 0 4px rgba(254, 240, 138, 0.8);
+      }
+      100% {
+        background-color: rgba(254, 240, 138, 0.88);
+        box-shadow: inset 3px 0 0 #d97706, 0 0 0 2px rgba(245, 158, 11, 0.45);
+      }
+    }
+
+    .pdf-para-num {
+      font-family: Inter, sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      color: #0f1e36;
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      padding: 1px 6px;
+      border-radius: 4px;
+      margin-right: 6px;
+      vertical-align: 1px;
+    }
+    .pdf-para.pdf-para-active .pdf-para-num {
+      background: #0f1e36;
+      color: #fef08a;
+      border-color: #0f1e36;
+    }
+
+    .margin-tag {
+      position: absolute;
+      right: 8px;
+      top: -13px;
+      background: #0f1e36;
+      color: #fef08a;
+      font-family: Inter, sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 9px;
+      border-radius: 9999px;
+      border: 1.5px solid #f59e0b;
+      box-shadow: 0 4px 10px rgba(15, 30, 54, 0.3);
+      white-space: nowrap;
+      max-width: calc(100% - 20px);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      pointer-events: none;
+      z-index: 15;
+    }
+
+    /* Uploaded Local PDF (PDF.js) canvas wrapper & highlights */
+    .pdfjs-page-wrapper {
+      position: relative;
+      background: #ffffff;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.4);
+      border-radius: 4px;
+      overflow: hidden;
+      max-width: 100%;
+    }
+    .pdfjs-highlight-box {
+      position: absolute;
+      background-color: rgba(254, 240, 138, 0.62);
+      border: 1.5px solid rgba(217, 119, 6, 0.9);
+      border-radius: 2px;
+      pointer-events: none;
+      mix-blend-mode: multiply;
+    }
+
+    /* Draggable Split Resizer */
+    .split-resizer {
+      width: 6px;
+      cursor: col-resize;
+      background: #cbd5e1;
+      transition: background-color 0.15s ease;
+    }
+    .split-resizer:hover,
+    .split-resizer.dragging {
+      background: #f59e0b;
+    }
+
+    /* Floating Viewport-Aware Tooltip */
+    #paraTooltip {
+      position: fixed;
+      z-index: 9999;
+      max-width: 320px;
+      pointer-events: none;
+      transition: opacity 0.12s ease;
+    }
+  </style>
+</head>
+
+<body class="font-sans text-slate-800 flex flex-col selection:bg-amber-200 selection:text-icj-navy">
+
+  <!-- ===================================================================== -->
+  <!-- 1. TOP HEADER BAR                                                     -->
+  <!-- ===================================================================== -->
+  <header class="bg-icj-navy text-white border-b border-slate-800 shadow-md z-30 shrink-0">
+    <div class="px-4 py-2.5 flex flex-wrap items-center justify-between gap-2.5">
+      <!-- Brand & Case Title -->
+      <div class="flex items-center gap-3 min-w-0">
+        <div class="w-9 h-9 rounded-lg bg-icj-navyLight border border-amber-400/50 flex items-center justify-center shrink-0" aria-hidden="true">
+          <svg class="w-5 h-5 text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 3v18" />
+            <path d="M5 7h14" />
+            <path d="M5 7l-2.5 6a3 3 0 0 0 5 0L5 7z" />
+            <path d="M19 7l-2.5 6a3 3 0 0 0 5 0L19 7z" />
+            <path d="M8 21h8" />
+          </svg>
+        </div>
+        <div class="min-w-0">
+          <h1 class="text-xs sm:text-sm font-bold tracking-tight text-white truncate">
+            ICJ Genocide, Evidence &amp; Intent Explorer — The Gambia v. Myanmar (19 Nov 2026)
+          </h1>
+          <p class="text-[11px] text-amber-200/90 truncate">
+            Substantive Rulings &amp; Synchronized Judgment PDF
+          </p>
+        </div>
+      </div>
+
+      <!-- Right Actions: QA Audit Button + Live Pass/Fail Badge + Mobile Pane Switcher -->
+      <div class="flex items-center gap-2 shrink-0">
+        <button
+          id="openQaAuditBtn"
+          type="button"
+          class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-icj-navyLight hover:bg-slate-700 border border-amber-400/60 text-xs font-semibold text-white shadow-sm transition cursor-pointer"
+          title="Run live DOM and functional UI quality checks"
+        >
+          <svg class="w-3.5 h-3.5 text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 11l3 3L22 4" />
+            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
+          </svg>
+          <span>QA Audit</span>
+          <span id="qaHeaderStatusPill" class="px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-slate-700 text-amber-200">
+            QA: Ready
+          </span>
+        </button>
+
+        <!-- Mobile Pane Switcher -->
+        <div class="lg:hidden flex items-center bg-icj-navyDark p-0.5 rounded-lg border border-slate-700">
+          <button id="mobileBtnExplorer" type="button" class="px-2.5 py-1 text-[11px] font-bold rounded-md bg-amber-400 text-icj-navy transition">
+            Rulings
+          </button>
+          <button id="mobileBtnPdf" type="button" class="px-2.5 py-1 text-[11px] font-bold rounded-md text-slate-300 transition">
+            PDF
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- =================================================================== -->
+    <!-- 2. PERSISTENT QUICK PARAGRAPH JUMP BAR                              -->
+    <!-- =================================================================== -->
+    <div id="quickJumpBar" class="bg-icj-navyDark border-t border-amber-400/30 px-3 sm:px-4 py-2 flex items-center gap-3 relative z-30">
+      <!-- Autocomplete Search Input -->
+      <div class="relative w-56 sm:w-72 shrink-0">
+        <div class="flex items-center">
+          <svg class="w-3.5 h-3.5 text-amber-400 absolute left-2.5 pointer-events-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
+          <input
+            id="quickJumpInput"
+            type="text"
+            autocomplete="off"
+            placeholder="Jump to Para. # or keyword (443, 134)... /"
+            aria-label="Jump to Paragraph number or keyword"
+            class="w-full pl-8 pr-12 py-1.5 text-xs bg-icj-navyLight border border-amber-400/45 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400"
+          />
+          <button
+            id="quickJumpGoBtn"
+            type="button"
+            class="absolute right-1 px-2 py-0.5 text-[11px] font-bold bg-amber-400 hover:bg-amber-300 text-icj-navy rounded transition cursor-pointer"
+          >
+            Go
+          </button>
+        </div>
+
+        <!-- Live Autocomplete Dropdown -->
+        <div
+          id="quickJumpDropdown"
+          class="hidden absolute left-0 right-0 top-full mt-1.5 bg-white text-slate-800 rounded-xl border border-slate-200 shadow-2xl max-h-72 overflow-y-auto z-50 divide-y divide-slate-100"
+          role="listbox"
+        ></div>
+      </div>
+
+      <div class="h-5 w-px bg-slate-700 shrink-0 hidden sm:block"></div>
+
+      <!-- Horizontally Scrollable Strip of 23 Paragraph Pills -->
+      <div id="quickJumpStrip" class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5 flex-1 min-w-0" aria-label="Quick Paragraph Jump Strip">
+        <!-- Populated dynamically from PARAGRAPHS -->
+      </div>
+    </div>
+  </header>
+
+  <!-- ===================================================================== -->
+  <!-- 3. SPLIT-PANE WORKSPACE                                               -->
+  <!-- ===================================================================== -->
+  <main id="workspace" class="flex-1 flex min-h-0 overflow-hidden relative bg-icj-workspace">
+
+    <!-- =================================================================== -->
+    <!-- LEFT PANE: ALL SUBSTANTIVE RULINGS ON ONE GROUPED SCROLLABLE PAGE   -->
+    <!-- =================================================================== -->
+    <section
+      id="leftPane"
+      class="w-full lg:w-[49%] h-full flex flex-col bg-icj-ivory border-r border-slate-200 min-w-0 overflow-hidden"
+    >
+      <!-- Compact Sticky Section Quick-Nav Bar (Scroll-Spy) -->
+      <nav
+        id="sectionQuickNav"
+        aria-label="Ruling Groups Quick Navigation"
+        class="bg-white/95 backdrop-blur border-b border-slate-200 px-3 py-2 flex items-center gap-1.5 overflow-x-auto no-scrollbar shrink-0 z-20 shadow-sm"
+      >
+        <button type="button" class="section-nav-pill active-section-pill" data-scroll-group="actus-reus">
+          1. Actus Reus
+        </button>
+        <button type="button" class="section-nav-pill" data-scroll-group="intent">
+          2. Genocidal Intent
+        </button>
+        <button type="button" class="section-nav-pill" data-scroll-group="defenses">
+          3. Defenses Rejected
+        </button>
+        <button type="button" class="section-nav-pill" data-scroll-group="evidence-remedies">
+          4. Evidence &amp; Remedies
+        </button>
+      </nav>
+
+      <!-- Unified Single-Page Scrollable Rulings Feed -->
+      <div id="explorerScroll" class="flex-1 overflow-y-auto overflow-x-hidden p-4 space-y-7 min-w-0 scroll-smooth">
+
+        <!-- =============================================================== -->
+        <!-- GROUP 1: ACTUS REUS (ARTICLE II(a)–(e))                         -->
+        <!-- =============================================================== -->
+        <section id="group-actus-reus" data-ruling-group="actus-reus" class="ruling-group space-y-3 scroll-mt-4">
+          <div class="flex items-center justify-between border-b border-slate-300 pb-2">
+            <div class="flex items-center gap-2">
+              <span class="w-6 h-6 rounded-md bg-icj-navy text-amber-300 font-bold text-xs flex items-center justify-center shrink-0">1</span>
+              <div>
+                <h2 class="text-sm font-bold text-icj-navy tracking-tight">Actus Reus (Article II(a)–(e))</h2>
+                <p class="text-[11px] text-slate-500">Protected group status &amp; prohibited acts established under the Genocide Convention</p>
+              </div>
+            </div>
+            <span class="hidden sm:inline-flex text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-slate-200 text-slate-700">6 Rulings</span>
+          </div>
+
+          <!-- Protected Group Card -->
+          <article id="card-actus-group" class="ruling-card bg-white rounded-xl border border-slate-200 border-l-4 border-l-icj-navy shadow-sm p-3.5 space-y-1.5" data-jump-para="168">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div class="flex flex-wrap items-center gap-1.5">
+                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">ESTABLISHED</span>
+                <h3 class="text-xs sm:text-sm font-bold text-icj-navy">Protected Ethnical Group (Article II Threshold)</h3>
+                <span class="viewing-badge items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-icj-navy text-amber-300">Viewing in PDF</span>
+              </div>
+              <span class="card-jump-pill">Jump to Para. 168 ↗</span>
+            </div>
+            <p class="text-xs text-slate-700 leading-relaxed">
+              The Rohingya constitute a distinct protected <strong>“ethnical group”</strong> under Article II based on shared language, religion, and heritage; domestic statelessness under Myanmar’s 1982 Citizenship Law cannot strip Convention protection (<button type="button" class="para-chip" data-jump-para="168">Para. 168</button>).
+            </p>
+          </article>
+
+          <!-- Art. II(a) Killing -->
+          <article id="card-actus-2a" class="ruling-card bg-white rounded-xl border border-slate-200 border-l-4 border-l-emerald-600 shadow-sm p-3.5 space-y-1.5" data-jump-para="182">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div class="flex flex-wrap items-center gap-1.5">
+                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">ESTABLISHED</span>
+                <h3 class="text-xs sm:text-sm font-bold text-icj-navy">Art. II(a) — Killing Members of the Group</h3>
+                <span class="viewing-badge items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-icj-navy text-amber-300">Viewing in PDF</span>
+              </div>
+              <span class="card-jump-pill">Jump to Para. 182 ↗</span>
+            </div>
+            <p class="text-xs text-slate-700 leading-relaxed">
+              Fully conclusive proof of systematic mass killings across northern Rakhine—including Min Gyi (Tula Toli), Chut Pyin, Maung Nu, and Gu Dar Pyin (<button type="button" class="para-chip" data-jump-para="182">Para. 182</button>). The Court accepted the estimate of <strong>~10,000 Rohingya killed</strong> as credibly supported by corroborated demographic and eyewitness evidence (<button type="button" class="para-chip" data-jump-para="205">Para. 205</button>).
+            </p>
+          </article>
+
+          <!-- Art. II(b) Serious Bodily or Mental Harm -->
+          <article id="card-actus-2b" class="ruling-card bg-white rounded-xl border border-slate-200 border-l-4 border-l-emerald-600 shadow-sm p-3.5 space-y-1.5" data-jump-para="231">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div class="flex flex-wrap items-center gap-1.5">
+                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">ESTABLISHED</span>
+                <h3 class="text-xs sm:text-sm font-bold text-icj-navy">Art. II(b) — Causing Serious Bodily or Mental Harm</h3>
+                <span class="viewing-badge items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-icj-navy text-amber-300">Viewing in PDF</span>
+              </div>
+              <span class="card-jump-pill">Jump to Para. 231 ↗</span>
+            </div>
+            <p class="text-xs text-slate-700 leading-relaxed">
+              Widespread mass gang rape and sexual &amp; gender-based violence against Rohingya women and girls, severe torture, and deliberate brutalization of children inflicted grave, lasting trauma contributing to group destruction (<button type="button" class="para-chip" data-jump-para="231">Para. 231</button>).
+            </p>
+          </article>
+
+          <!-- Art. II(c) Conditions of Life -->
+          <article id="card-actus-2c" class="ruling-card bg-white rounded-xl border border-slate-200 border-l-4 border-l-emerald-600 shadow-sm p-3.5 space-y-1.5" data-jump-para="264">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div class="flex flex-wrap items-center gap-1.5">
+                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">ESTABLISHED</span>
+                <h3 class="text-xs sm:text-sm font-bold text-icj-navy">Art. II(c) — Conditions of Life Calculated for Physical Destruction</h3>
+                <span class="viewing-badge items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-icj-navy text-amber-300">Viewing in PDF</span>
+              </div>
+              <span class="card-jump-pill">Jump to Para. 264 ↗</span>
+            </div>
+            <p class="text-xs text-slate-700 leading-relaxed">
+              Established through the cumulative effect of the 2017 clearance operations: systematic razing of villages, destruction of crops and livestock, and deliberate denial of food, shelter, and medical relief calculated to bring about physical destruction (<button type="button" class="para-chip" data-jump-para="264">Para. 264</button>).
+            </p>
+          </article>
+
+          <!-- Art. II(d) Preventing Births -->
+          <article id="card-actus-2d" class="ruling-card bg-white rounded-xl border border-slate-200 border-l-4 border-l-amber-500 shadow-sm p-3.5 space-y-1.5" data-jump-para="298">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div class="flex flex-wrap items-center gap-1.5">
+                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-900">NUANCED / BIOLOGICAL RENEWAL</span>
+                <h3 class="text-xs sm:text-sm font-bold text-icj-navy">Art. II(d) — Measures Intended to Prevent Births</h3>
+                <span class="viewing-badge items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-icj-navy text-amber-300">Viewing in PDF</span>
+              </div>
+              <span class="card-jump-pill">Jump to Para. 298 ↗</span>
+            </div>
+            <p class="text-xs text-slate-700 leading-relaxed">
+              Clarified that Article II(d) encompasses both physical and mental measures impairing a group’s <strong>capacity to renew itself</strong>—including trauma from systematic sexual violence, sex-separation, and targeting of pregnant women—while noting strict proof of reproductive intent (<button type="button" class="para-chip" data-jump-para="298">Para. 298</button>).
+            </p>
+          </article>
+
+          <!-- Art. II(e) Forcibly Transferring Children -->
+          <article id="card-actus-2e" class="ruling-card bg-white rounded-xl border border-slate-200 border-l-4 border-l-slate-400 shadow-sm p-3.5 space-y-1.5" data-jump-para="315">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div class="flex flex-wrap items-center gap-1.5">
+                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-200 text-slate-700">NOT ESTABLISHED</span>
+                <h3 class="text-xs sm:text-sm font-bold text-slate-700">Art. II(e) — Forcibly Transferring Children of the Group</h3>
+                <span class="viewing-badge items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-icj-navy text-amber-300">Viewing in PDF</span>
+              </div>
+              <span class="card-jump-pill">Jump to Para. 315 ↗</span>
+            </div>
+            <p class="text-xs text-slate-600 leading-relaxed">
+              The legal threshold for forcible transfer of children to another group under Article II(e) was not met on the record, and The Gambia did not press a standalone finding under this subparagraph (<button type="button" class="para-chip" data-jump-para="315">Para. 315</button>).
+            </p>
+          </article>
+        </section>
+
+        <!-- =============================================================== -->
+        <!-- GROUP 2: GENOCIDAL INTENT (DOLUS SPECIALIS)                     -->
+        <!-- =============================================================== -->
+        <section id="group-intent" data-ruling-group="intent" class="ruling-group space-y-3 scroll-mt-4">
+          <div class="flex items-center justify-between border-b border-slate-300 pb-2">
+            <div class="flex items-center gap-2">
+              <span class="w-6 h-6 rounded-md bg-icj-navy text-amber-300 font-bold text-xs flex items-center justify-center shrink-0">2</span>
+              <div>
+                <h2 class="text-sm font-bold text-icj-navy tracking-tight">Genocidal Intent (Dolus Specialis)</h2>
+                <p class="text-[11px] text-slate-500">Landmark Para. 443 Coexistence Rule &amp; 4 circumstantial pillars of State intent</p>
+              </div>
+            </div>
+            <span class="hidden sm:inline-flex text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-amber-100 text-amber-900">Landmark Rule</span>
+          </div>
+
+          <!-- Featured Callout Card: Para. 443 Coexistence Rule -->
+          <article id="card-intent-443" class="ruling-card is-featured bg-gradient-to-br from-icj-navy via-icj-navy to-icj-navyLight text-white rounded-xl border-2 border-amber-400 shadow-md p-4 space-y-2.5" data-jump-para="443">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div class="flex flex-wrap items-center gap-2">
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-amber-400 text-icj-navy">
+                  Landmark Para. 443 Coexistence Rule
+                </span>
+                <span class="viewing-badge items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-white text-icj-navy">Viewing in PDF</span>
+              </div>
+              <span class="card-jump-pill">Jump to Para. 443 ↗</span>
+            </div>
+            <blockquote class="font-serif italic text-[15px] leading-relaxed text-amber-100 border-l-2 border-amber-400 pl-3">
+              “Genocidal intent need not be the sole intention of a State; it may coexist alongside military or counter-insurgency objectives, provided those objectives are not incompatible with an intent to destroy the group in whole or in part.”
+            </blockquote>
+            <p class="text-xs text-slate-300 leading-relaxed">
+              Adopting observations from the 11 intervening States (<button type="button" class="para-chip" data-jump-para="130">Para. 130</button>), the Court ruled that concurrent security or counter-insurgency aims do <strong>not</strong> defeat <em>dolus specialis</em> where destructive means confirm genocidal intent (<button type="button" class="para-chip" data-jump-para="443">Para. 443</button>).
+            </p>
+          </article>
+
+          <!-- 4 Circumstantial Pillars Grid -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <!-- Pillar 1 -->
+            <article id="card-intent-pillar1" class="ruling-card bg-white rounded-xl border border-slate-200 border-l-4 border-l-amber-500 shadow-sm p-3.5 space-y-1.5" data-jump-para="342">
+              <div class="flex flex-wrap items-center justify-between gap-1.5">
+                <div class="flex items-center gap-1.5">
+                  <h3 class="text-xs font-bold text-icj-navy">Pillar 1: Scale &amp; Systematic Pattern</h3>
+                  <span class="viewing-badge items-center px-1.5 py-0.5 rounded-full text-[9px] font-bold bg-icj-navy text-amber-300">Viewing</span>
+                </div>
+                <span class="card-jump-pill">Para. 342 ↗</span>
+              </div>
+              <p class="text-[11px] text-slate-600 leading-relaxed">
+                Uniform clearance modus operandi across Maungdaw, Buthidaung, and Rathedaung: pre-dawn encirclement, firing on fleeing civilians, sinking Naf River boats, and border landmines (<button type="button" class="para-chip" data-jump-para="342">Para. 342</button>).
+              </p>
+            </article>
+
+            <!-- Pillar 2 -->
+            <article id="card-intent-pillar2" class="ruling-card bg-white rounded-xl border border-slate-200 border-l-4 border-l-amber-500 shadow-sm p-3.5 space-y-1.5" data-jump-para="412">
+              <div class="flex flex-wrap items-center justify-between gap-1.5">
+                <div class="flex items-center gap-1.5">
+                  <h3 class="text-xs font-bold text-icj-navy">Pillar 2: Dehumanizing Rhetoric</h3>
+                  <span class="viewing-badge items-center px-1.5 py-0.5 rounded-full text-[9px] font-bold bg-icj-navy text-amber-300">Viewing</span>
+                </div>
+                <span class="card-jump-pill">Para. 412 ↗</span>
+              </div>
+              <p class="text-[11px] text-slate-600 leading-relaxed">
+                Senior officials and State-tolerated campaigns framed the Rohingya as “illegal Bengalis,” invaders, and “unfinished business,” fostering an environment of existential hostility (<button type="button" class="para-chip" data-jump-para="412">Para. 412</button>).
+              </p>
+            </article>
+
+            <!-- Pillar 3 -->
+            <article id="card-intent-pillar3" class="ruling-card bg-white rounded-xl border border-slate-200 border-l-4 border-l-amber-500 shadow-sm p-3.5 space-y-1.5" data-jump-para="378">
+              <div class="flex flex-wrap items-center justify-between gap-1.5">
+                <div class="flex items-center gap-1.5">
+                  <h3 class="text-xs font-bold text-icj-navy">Pillar 3: Targeted Razing of Villages</h3>
+                  <span class="viewing-badge items-center px-1.5 py-0.5 rounded-full text-[9px] font-bold bg-icj-navy text-amber-300">Viewing</span>
+                </div>
+                <span class="card-jump-pill">Para. 378 ↗</span>
+              </div>
+              <p class="text-[11px] text-slate-600 leading-relaxed">
+                Over 390 Rohingya villages and mosques were systematically razed while immediately adjacent non-Rohingya settlements and structures were spared (<button type="button" class="para-chip" data-jump-para="378">Para. 378</button>).
+              </p>
+            </article>
+
+            <!-- Pillar 4 -->
+            <article id="card-intent-pillar4" class="ruling-card bg-white rounded-xl border border-slate-200 border-l-4 border-l-amber-500 shadow-sm p-3.5 space-y-1.5" data-jump-para="479">
+              <div class="flex flex-wrap items-center justify-between gap-1.5">
+                <div class="flex items-center gap-1.5">
+                  <h3 class="text-xs font-bold text-icj-navy">Pillar 4: Systemic Impunity &amp; Denial</h3>
+                  <span class="viewing-badge items-center px-1.5 py-0.5 rounded-full text-[9px] font-bold bg-icj-navy text-amber-300">Viewing</span>
+                </div>
+                <span class="card-jump-pill">Para. 479 ↗</span>
+              </div>
+              <p class="text-[11px] text-slate-600 leading-relaxed">
+                Total absence of credible domestic prosecutions, blanket official denial, and promotion of implicated commanders confirm genocidal intent as the only reasonable inference (<button type="button" class="para-chip" data-jump-para="479">Para. 479</button>).
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <!-- =============================================================== -->
+        <!-- GROUP 3: MYANMAR'S DEFENSES REJECTED                            -->
+        <!-- =============================================================== -->
+        <section id="group-defenses" data-ruling-group="defenses" class="ruling-group space-y-3 scroll-mt-4">
+          <div class="flex items-center justify-between border-b border-slate-300 pb-2">
+            <div class="flex items-center gap-2">
+              <span class="w-6 h-6 rounded-md bg-icj-navy text-amber-300 font-bold text-xs flex items-center justify-center shrink-0">3</span>
+              <div>
+                <h2 class="text-sm font-bold text-icj-navy tracking-tight">Myanmar’s Defenses Rejected</h2>
+                <p class="text-[11px] text-slate-500">Side-by-side comparison of Myanmar’s 3 core defenses and the Court’s rulings rejecting each</p>
+              </div>
+            </div>
+            <span class="hidden sm:inline-flex text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-rose-100 text-rose-800">3 Defenses Rejected</span>
+          </div>
+
+          <!-- Defense 1: Counter-Insurgency / ARSA Response -->
+          <article id="card-defense-arsa" class="ruling-card bg-white rounded-xl border border-slate-200 border-l-4 border-l-rose-600 shadow-sm p-3.5 space-y-2.5" data-jump-para="456">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div class="flex flex-wrap items-center gap-1.5">
+                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-100 text-rose-800">REJECTED</span>
+                <h3 class="text-xs sm:text-sm font-bold text-icj-navy">Defense 1: Counter-Insurgency / ARSA Response</h3>
+                <span class="viewing-badge items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-icj-navy text-amber-300">Viewing in PDF</span>
+              </div>
+              <span class="card-jump-pill">Jump to Para. 456 ↗</span>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
+              <div class="p-2.5 rounded-lg bg-slate-50 border border-slate-200">
+                <div class="text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1">Myanmar’s Submission</div>
+                <p class="text-slate-700 leading-relaxed">Contended the 2017 clearance operations were lawful counter-insurgency responses to ARSA militant attacks on 30 security outposts on 25 August 2017.</p>
+              </div>
+              <div class="p-2.5 rounded-lg bg-amber-50/75 border border-amber-200">
+                <div class="text-[10px] font-bold uppercase tracking-wider text-icj-navy mb-1">ICJ Ruling</div>
+                <p class="text-slate-800 leading-relaxed">Under <button type="button" class="para-chip" data-jump-para="443">Para. 443</button>, counter-insurgency aims do not negate genocidal intent; wholesale attacks on unarmed villages with zero ARSA presence were wildly disproportionate (<button type="button" class="para-chip" data-jump-para="456">Para. 456</button>).</p>
+              </div>
+            </div>
+          </article>
+
+          <!-- Defense 2: Evidentiary Challenge to UN FFM Reports -->
+          <article id="card-defense-ffm" class="ruling-card bg-white rounded-xl border border-slate-200 border-l-4 border-l-rose-600 shadow-sm p-3.5 space-y-2.5" data-jump-para="152">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div class="flex flex-wrap items-center gap-1.5">
+                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-100 text-rose-800">REJECTED</span>
+                <h3 class="text-xs sm:text-sm font-bold text-icj-navy">Defense 2: Evidentiary Challenge to UN FFM Reports</h3>
+                <span class="viewing-badge items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-icj-navy text-amber-300">Viewing in PDF</span>
+              </div>
+              <span class="card-jump-pill">Jump to Para. 152 ↗</span>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
+              <div class="p-2.5 rounded-lg bg-slate-50 border border-slate-200">
+                <div class="text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1">Myanmar’s Submission</div>
+                <p class="text-slate-700 leading-relaxed">Argued UN Fact-Finding Mission (IIFFMM) reports relied on anonymous refugee accounts and failed to meet the Court’s “fully conclusive” evidentiary bar.</p>
+              </div>
+              <div class="p-2.5 rounded-lg bg-amber-50/75 border border-amber-200">
+                <div class="text-[10px] font-bold uppercase tracking-wider text-icj-navy mb-1">ICJ Ruling</div>
+                <p class="text-slate-800 leading-relaxed">Substantial corroborative weight accorded to IIFFMM and IIMM dossiers where transparently cross-verified by satellite imagery, medical surveys, and consistent testimony (<button type="button" class="para-chip" data-jump-para="152">Para. 152</button>, <button type="button" class="para-chip" data-jump-para="134">Para. 134</button>).</p>
+              </div>
+            </div>
+          </article>
+
+          <!-- Defense 3: Absence of a Formal State Plan -->
+          <article id="card-defense-plan" class="ruling-card bg-white rounded-xl border border-slate-200 border-l-4 border-l-rose-600 shadow-sm p-3.5 space-y-2.5" data-jump-para="468">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div class="flex flex-wrap items-center gap-1.5">
+                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-100 text-rose-800">REJECTED</span>
+                <h3 class="text-xs sm:text-sm font-bold text-icj-navy">Defense 3: Absence of a Formal State Plan</h3>
+                <span class="viewing-badge items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-icj-navy text-amber-300">Viewing in PDF</span>
+              </div>
+              <span class="card-jump-pill">Jump to Para. 468 ↗</span>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
+              <div class="p-2.5 rounded-lg bg-slate-50 border border-slate-200">
+                <div class="text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1">Myanmar’s Submission</div>
+                <p class="text-slate-700 leading-relaxed">Emphasized the absence of any captured written directive or explicit State policy ordering the physical destruction of the Rohingya, blaming isolated rogue units.</p>
+              </div>
+              <div class="p-2.5 rounded-lg bg-amber-50/75 border border-amber-200">
+                <div class="text-[10px] font-bold uppercase tracking-wider text-icj-navy mb-1">ICJ Ruling</div>
+                <p class="text-slate-800 leading-relaxed">A written blueprint is unnecessary; synchronized multi-township deployment of elite Light Infantry Divisions refutes rogue-unit claims and proves a coordinated State plan (<button type="button" class="para-chip" data-jump-para="468">Para. 468</button>, <button type="button" class="para-chip" data-jump-para="479">Para. 479</button>).</p>
+              </div>
+            </div>
+          </article>
+        </section>
+
+        <!-- =============================================================== -->
+        <!-- GROUP 4: EVIDENTIARY STANDARDS, PROVISIONAL MEASURES & REMEDIES -->
+        <!-- =============================================================== -->
+        <section id="group-evidence-remedies" data-ruling-group="evidence-remedies" class="ruling-group space-y-3 scroll-mt-4 pb-6">
+          <div class="flex items-center justify-between border-b border-slate-300 pb-2">
+            <div class="flex items-center gap-2">
+              <span class="w-6 h-6 rounded-md bg-icj-navy text-amber-300 font-bold text-xs flex items-center justify-center shrink-0">4</span>
+              <div>
+                <h2 class="text-sm font-bold text-icj-navy tracking-tight">Evidentiary Standards, Provisional Measures &amp; Remedies</h2>
+                <p class="text-[11px] text-slate-500">Standard of proof, 2020 Order breach, State responsibility, cessation &amp; reparations</p>
+              </div>
+            </div>
+            <span class="hidden sm:inline-flex text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-blue-100 text-blue-900">3 Rulings</span>
+          </div>
+
+          <!-- Standard of Proof & Corroboration -->
+          <article id="card-ev-standard" class="ruling-card bg-white rounded-xl border border-slate-200 border-l-4 border-l-icj-navy shadow-sm p-3.5 space-y-1.5" data-jump-para="134">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div class="flex flex-wrap items-center gap-1.5">
+                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-amber-300">STANDARD OF PROOF</span>
+                <h3 class="text-xs sm:text-sm font-bold text-icj-navy">“Fully Conclusive” Proof &amp; UN FFM / IIMM Corroboration</h3>
+                <span class="viewing-badge items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-icj-navy text-amber-300">Viewing in PDF</span>
+              </div>
+              <span class="card-jump-pill">Jump to Para. 134 ↗</span>
+            </div>
+            <p class="text-xs text-slate-700 leading-relaxed">
+              Exercising its merits mandate (<button type="button" class="para-chip" data-jump-para="125">Para. 125</button>), the Court reaffirmed that genocide requires <strong>fully conclusive</strong> proof assessed holistically across direct and circumstantial evidence (<button type="button" class="para-chip" data-jump-para="134">Para. 134</button>), granting high probative weight to corroborated UN FFM and IIMM dossiers (<button type="button" class="para-chip" data-jump-para="152">Para. 152</button>).
+            </p>
+          </article>
+
+          <!-- Breach of 23 January 2020 Provisional Measures Order -->
+          <article id="card-rem-pm" class="ruling-card bg-white rounded-xl border border-amber-300 border-l-4 border-l-amber-600 shadow-sm p-3.5 space-y-2" data-jump-para="504">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div class="flex flex-wrap items-center gap-1.5">
+                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-600 text-white">BREACH FOUND</span>
+                <h3 class="text-xs sm:text-sm font-bold text-icj-navy">Breach of 23 January 2020 Provisional Measures Order</h3>
+                <span class="viewing-badge items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-icj-navy text-amber-300">Viewing in PDF</span>
+              </div>
+              <span class="card-jump-pill">Jump to Para. 504 ↗</span>
+            </div>
+            <p class="text-xs text-slate-700 leading-relaxed">
+              Myanmar violated the binding 2020 Order by failing to prevent ongoing genocidal harms, destroying crime-site evidence through bulldozing and military construction over razed Rohingya villages, and failing to submit adequate, verifiable compliance reports (<button type="button" class="para-chip" data-jump-para="504">Para. 504</button>).
+            </p>
+          </article>
+
+          <!-- State Responsibility, Cessation, Guarantees of Non-Repetition & Reparations -->
+          <article id="card-rem-reparations" class="ruling-card bg-white rounded-xl border border-slate-200 border-l-4 border-l-blue-700 shadow-sm p-3.5 space-y-2" data-jump-para="521">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div class="flex flex-wrap items-center gap-1.5">
+                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-700 text-white">REMEDIES ORDERED</span>
+                <h3 class="text-xs sm:text-sm font-bold text-icj-navy">State Responsibility, Cessation, Non-Repetition &amp; Reparations</h3>
+                <span class="viewing-badge items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-icj-navy text-amber-300">Viewing in PDF</span>
+              </div>
+              <span class="card-jump-pill">Jump to Para. 521 ↗</span>
+            </div>
+            <p class="text-xs text-slate-700 leading-relaxed">
+              Attributing Tatmadaw and Border Guard Police conduct directly to Myanmar (<button type="button" class="para-chip" data-jump-para="127">Para. 127</button>), the Court held Myanmar directly responsible for committing genocide (<button type="button" class="para-chip" data-jump-para="542">Para. 542</button>) and ordered cessation, safe voluntary return, non-discriminatory citizenship access, full reparation, and a 2-year compliance report (<button type="button" class="para-chip" data-jump-para="521">Para. 521</button>, <button type="button" class="para-chip" data-jump-para="568">Para. 568</button>).
+            </p>
+          </article>
+        </section>
+
+      </div>
+    </section>
+
+    <!-- Draggable Vertical Split Resizer -->
+    <div id="splitResizer" class="hidden lg:block split-resizer shrink-0" title="Drag to resize panes"></div>
+
+    <!-- =================================================================== -->
+    <!-- RIGHT PANE: DUAL-MODE EMBEDDED PDF VIEWER                           -->
+    <!-- =================================================================== -->
+    <section
+      id="rightPane"
+      class="hidden lg:flex flex-1 h-full flex-col bg-slate-800 min-w-0 overflow-hidden"
+    >
+      <!-- Mode Toggle & Zoom Toolbar -->
+      <div class="bg-[#16253f] text-slate-200 border-b border-slate-700 px-3 py-2 flex flex-wrap items-center justify-between gap-2 shrink-0 z-20">
+        <!-- Dual-Mode Toggle -->
+        <div class="flex items-center bg-icj-navyDark p-0.5 rounded-lg border border-slate-700">
+          <button id="modeAnnotatedBtn" type="button" class="px-2.5 py-1 text-xs font-bold rounded-md bg-amber-400 text-icj-navy transition cursor-pointer">
+            Annotated Judgment PDF
+          </button>
+          <button id="modeUploadBtn" type="button" class="px-2.5 py-1 text-xs font-semibold rounded-md text-slate-300 hover:text-white transition cursor-pointer">
+            Upload Official PDF (PDF.js)
+          </button>
+        </div>
+
+        <!-- Zoom Controls -->
+        <div class="flex items-center gap-2">
+          <div class="flex items-center bg-icj-navyDark rounded-lg border border-slate-700 px-1 py-0.5">
+            <button id="zoomOutBtn" type="button" class="px-1.5 py-0.5 text-xs font-bold hover:text-amber-400 transition cursor-pointer" title="Zoom out">−</button>
+            <span id="zoomLabel" class="text-xs font-semibold px-2 min-w-[44px] text-center select-none">100%</span>
+            <button id="zoomInBtn" type="button" class="px-1.5 py-0.5 text-xs font-bold hover:text-amber-400 transition cursor-pointer" title="Zoom in">+</button>
+          </div>
+          <span id="pdfPageBadge" class="text-xs font-medium text-slate-300 px-2 py-1 rounded bg-slate-900/60 border border-slate-700 select-none">
+            Page 6 / 7
+          </span>
+        </div>
+      </div>
+
+      <!-- Pinned Active Citation Inspector Bar -->
+      <div id="activeCitationInspector" class="bg-icj-navyDark border-b-2 border-amber-500/80 px-3.5 py-2 flex flex-wrap items-center justify-between gap-2 text-xs shrink-0 shadow z-10">
+        <div class="flex items-center gap-2.5 min-w-0 flex-1">
+          <span id="inspectorParaNum" class="px-2.5 py-0.5 rounded-md font-bold bg-amber-400 text-icj-navy shrink-0">
+            Para. 443
+          </span>
+          <div class="min-w-0">
+            <div id="inspectorTitle" class="font-bold text-amber-200 truncate">
+              Landmark Coexistence Rule
+            </div>
+            <div id="inspectorSignificance" class="text-[11px] text-slate-300 truncate">
+              Genocidal intent need not be the sole objective; it may coexist with military or counter-insurgency aims.
+            </div>
+          </div>
+        </div>
+
+        <!-- Prev / Next Stepper & Locate in Explorer -->
+        <div class="flex items-center gap-1.5 shrink-0">
+          <span id="stepperCount" class="text-[11px] font-semibold text-slate-400 hidden sm:inline mr-1">16 / 23</span>
+          <button id="prevParaBtn" type="button" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-amber-400 hover:text-icj-navy text-slate-200 border border-slate-600 font-semibold transition cursor-pointer" title="Previous paragraph (ArrowLeft)">
+            ← Prev
+          </button>
+          <button id="nextParaBtn" type="button" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-amber-400 hover:text-icj-navy text-slate-200 border border-slate-600 font-semibold transition cursor-pointer" title="Next paragraph (ArrowRight)">
+            Next →
+          </button>
+          <button id="locateInExplorerBtn" type="button" class="px-2.5 py-1 rounded-lg bg-amber-500/20 hover:bg-amber-400 hover:text-icj-navy text-amber-300 border border-amber-400/50 font-semibold transition cursor-pointer" title="Scroll left rulings page directly to this card">
+            Locate in Explorer ↙
+          </button>
+        </div>
+      </div>
+
+      <!-- Scrollable PDF Viewport -->
+      <div id="pdfViewport" class="flex-1 overflow-y-auto overflow-x-auto bg-[#334155] p-4 sm:p-6 flex flex-col items-center min-w-0">
+
+        <!-- MODE 1: ANNOTATED JUDGMENT PDF (7 A4 PAGES) -->
+        <div id="annotatedPdfContainer" class="w-full flex flex-col items-center gap-6 origin-top transition-transform duration-150">
+          <!-- Dynamically rendered from PARAGRAPHS -->
+        </div>
+
+        <!-- MODE 2: UPLOADED LOCAL PDF (PDF.js) -->
+        <div id="localPdfContainer" class="hidden w-full flex flex-col items-center gap-5">
+          <input id="localPdfInput" type="file" accept="application/pdf" class="hidden" />
+          <div
+            id="localPdfDropZone"
+            class="max-w-lg w-full mt-8 p-7 rounded-2xl border-2 border-dashed border-slate-500 bg-slate-800/90 text-center space-y-3.5 transition hover:border-amber-400"
+          >
+            <div class="w-12 h-12 mx-auto rounded-xl bg-icj-navy border border-amber-400/50 flex items-center justify-center">
+              <svg class="w-6 h-6 text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                <polyline points="14 2 14 8 20 8" />
+                <line x1="12" y1="18" x2="12" y2="12" />
+                <polyline points="9 15 12 12 15 15" />
+              </svg>
+            </div>
+            <div>
+              <h3 class="text-sm font-bold text-white">Upload Official ICJ Judgment PDF</h3>
+              <p class="text-xs text-slate-300 mt-1 leading-relaxed">
+                Drag &amp; drop a local PDF here or choose a file. Pages render onto HTML5 canvases via PDF.js, text positions are indexed automatically, and clicking any ruling or citation draws translucent yellow highlight boxes over the matched paragraph.
+              </p>
+              <p id="pdfjsAvailabilityNote" class="text-[11px] text-amber-300 mt-1.5 hidden"></p>
+            </div>
+            <button id="localPdfSelectBtn" type="button" class="px-4 py-2 rounded-lg bg-amber-400 hover:bg-amber-300 text-icj-navy font-bold text-xs shadow transition cursor-pointer">
+              Choose PDF File
+            </button>
+          </div>
+
+          <div id="localPdfProgressWrap" class="hidden max-w-lg w-full bg-slate-900 border border-slate-700 rounded-xl p-3 space-y-1.5">
+            <div class="flex justify-between text-xs text-slate-300">
+              <span id="localPdfProgressLabel">Indexing PDF pages...</span>
+              <span id="localPdfProgressPct" class="font-bold text-amber-400">0%</span>
+            </div>
+            <div class="w-full h-1.5 bg-slate-700 rounded-full overflow-hidden">
+              <div id="localPdfProgressBar" class="h-full bg-amber-400 transition-all duration-150" style="width: 0%"></div>
+            </div>
+          </div>
+
+          <div id="localPdfPagesHost" class="w-full flex flex-col items-center gap-6"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===================================================================== -->
+  <!-- 4. BUILT-IN LIVE UI QUALITY AUDIT DRAWER                              -->
+  <!-- ===================================================================== -->
+  <div id="qaAuditBackdrop" class="hidden fixed inset-0 bg-slate-950/60 backdrop-blur-[2px] z-50 flex justify-end">
+    <aside
+      id="qaAuditDrawer"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="qaDrawerTitle"
+      class="w-full max-w-lg bg-white h-full shadow-2xl flex flex-col border-l border-slate-200 overflow-hidden"
+    >
+      <!-- Drawer Header -->
+      <div class="bg-icj-navy text-white px-5 py-4 flex items-center justify-between gap-3 shrink-0">
+        <div>
+          <div class="flex items-center gap-2">
+            <h2 id="qaDrawerTitle" class="text-sm font-bold tracking-wide">Live UI &amp; Functional QA Audit</h2>
+            <span id="qaSummaryBadge" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-400 text-icj-navy">
+              Pending
+            </span>
+          </div>
+          <p class="text-[11px] text-slate-300 mt-0.5">8 real DOM &amp; functional checks for the single-page rulings architecture</p>
+        </div>
+        <button id="closeQaDrawerBtn" type="button" class="p-1.5 rounded-lg hover:bg-icj-navyLight text-slate-300 hover:text-white transition cursor-pointer" aria-label="Close QA Audit Drawer">
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Action Controls -->
+      <div class="bg-slate-50 border-b border-slate-200 px-5 py-3 flex flex-wrap items-center gap-2 shrink-0">
+        <button id="rerunQaBtn" type="button" class="px-3 py-1.5 rounded-lg bg-icj-navy hover:bg-icj-navyLight text-white text-xs font-bold transition cursor-pointer">
+          Re-run All Checks
+        </button>
+        <button id="smokeTestJumpBtn" type="button" class="px-3 py-1.5 rounded-lg bg-amber-400 hover:bg-amber-300 text-icj-navy text-xs font-bold transition cursor-pointer">
+          Smoke-Test Random Jump
+        </button>
+        <span id="qaTotalTime" class="ml-auto text-[11px] font-semibold text-slate-500"></span>
+      </div>
+
+      <!-- Check Results List -->
+      <div id="qaResultsList" class="flex-1 overflow-y-auto p-5 space-y-3"></div>
+    </aside>
+  </div>
+
+  <!-- Viewport-Aware Floating Hover Tooltip -->
+  <div id="paraTooltip" class="hidden opacity-0 bg-icj-navyDark text-slate-100 border border-amber-400/70 rounded-xl shadow-2xl p-3 text-xs">
+    <div class="flex items-center justify-between gap-2 mb-1">
+      <span id="tooltipTitle" class="px-1.5 py-0.5 rounded bg-amber-400 text-icj-navy font-bold text-[10px]">Para. 443</span>
+      <span id="tooltipTag" class="text-[10px] text-amber-300 font-semibold truncate">Landmark Coexistence Rule</span>
+    </div>
+    <p id="tooltipBody" class="font-serif italic text-slate-200 leading-snug"></p>
+  </div>
+
+  <!-- Non-blocking Toast Container -->
+  <div id="toastHost" class="fixed bottom-4 left-4 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+  <!-- ===================================================================== -->
+  <!-- APPLICATION LOGIC (UNIFIED 23-PARAGRAPH REGISTRY + LIVE QA AUDIT)     -->
+  <!-- ===================================================================== -->
+  <script>
+    (function () {
+      'use strict';
+
+      if (window.pdfjsLib) {
+        pdfjsLib.GlobalWorkerOptions.workerSrc =
+          'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+      }
+
+      /* ===================================================================
+       * 1. UNIFIED SINGLE-SOURCE-OF-TRUTH DATA REGISTRY (23 PARAGRAPHS)
+       * =================================================================== */
+      const PARAGRAPHS = [
+        {
+          num: 125,
+          page: 1,
+          group: 'evidence-remedies',
+          cardId: 'card-ev-standard',
+          title: 'I. Merits Mandate & Scope of Adjudication',
+          tag: 'Merits Mandate',
+          significance: 'Sets out the Court’s mandate to adjudicate Myanmar’s substantive responsibility under the Genocide Convention.',
+          text: 'Having affirmed its jurisdiction and the admissibility of The Gambia’s Application on 22 July 2022, the Court now adjudicates the substantive merits of whether the Republic of the Union of Myanmar breached its obligations under Articles II and III of the Genocide Convention during the 2017 clearance operations in northern Rakhine State.'
+        },
+        {
+          num: 127,
+          page: 1,
+          group: 'evidence-remedies',
+          cardId: 'card-rem-reparations',
+          title: 'I. Direct State Attribution (ARSIWA Art. 4)',
+          tag: 'State Attribution',
+          significance: 'Conduct of the Tatmadaw, Myanmar Police Force, and Border Guard Police is directly attributable to Myanmar.',
+          text: 'Under customary international law reflected in Article 4 of the Articles on Responsibility of States for Internationally Wrongful Acts, the conduct of the Tatmadaw, the Myanmar Police Force, and the Border Guard Police constitutes acts of State organs directly attributable to Myanmar.'
+        },
+        {
+          num: 130,
+          page: 1,
+          group: 'intent',
+          cardId: 'card-intent-443',
+          title: 'I. Observations of 11 Intervening States',
+          tag: '11 Interveners (Art. 63)',
+          significance: 'Notes the legal construction submitted by 11 intervening States on dolus specialis, sexual violence, and child targeting.',
+          text: 'In interpreting Articles II and III of the Convention, the Court has duly considered the written and oral observations of the eleven States admitted to intervene under Article 63 of the Statute concerning the inference of genocidal intent, gender-based violence, and the protection of children.'
+        },
+        {
+          num: 134,
+          page: 2,
+          group: 'evidence-remedies',
+          cardId: 'card-ev-standard',
+          title: 'II. Evidentiary Standard (“Fully Conclusive”)',
+          tag: 'Fully Conclusive Proof',
+          significance: 'Reaffirms the “fully conclusive” standard of proof for genocide while allowing holistic circumstantial inference.',
+          text: 'Reaffirming its jurisprudence in Bosnia and Herzegovina v. Serbia and Montenegro (2007), the Court holds that charges of exceptional gravity such as genocide must be proved by evidence that is fully conclusive. This high standard does not preclude reliance on circumstantial evidence where corroborated facts, assessed holistically, leave no reasonable doubt.'
+        },
+        {
+          num: 152,
+          page: 2,
+          group: 'defenses',
+          cardId: 'card-defense-ffm',
+          title: 'II. Corroborative Weight of UN FFM & IIMM Dossiers',
+          tag: 'UN FFM / IIMM Weight',
+          significance: 'Rejects Myanmar’s evidentiary challenge and grants substantial weight to corroborated IIFFMM and IIMM findings.',
+          text: 'The Court rejects Myanmar’s contention that United Nations Fact-Finding Mission (IIFFMM) reports lack probative value. Substantial corroborative weight is accorded to IIFFMM and Independent Investigative Mechanism for Myanmar (IIMM) dossiers where transparently sourced and cross-verified by satellite imagery, medical surveys, and consistent survivor testimony.'
+        },
+        {
+          num: 168,
+          page: 2,
+          group: 'actus-reus',
+          cardId: 'card-actus-group',
+          title: 'III. The Rohingya as a Protected Ethnical Group',
+          tag: 'Protected Group',
+          significance: 'Confirms the Rohingya constitute a protected “ethnical group” under Article II despite domestic statelessness.',
+          text: 'Sharing a distinct language, religious tradition, cultural heritage, and historical identity in Rakhine State, the Rohingya constitute a protected “ethnical group” within the meaning of Article II of the Convention. Domestic denial of citizenship under Myanmar’s 1982 Citizenship Law cannot deprive a group of protection under international law.'
+        },
+        {
+          num: 182,
+          page: 3,
+          group: 'actus-reus',
+          cardId: 'card-actus-2a',
+          title: 'IV. Actus Reus: Article II(a) Mass Killings',
+          tag: 'Art. II(a) Killings',
+          significance: 'Finds fully conclusive proof of systematic mass killings at Min Gyi (Tula Toli), Chut Pyin, Maung Nu, and Gu Dar Pyin.',
+          text: 'The Court is satisfied by fully conclusive evidence that members of the Tatmadaw and security forces perpetrated large-scale, systematic killings of Rohingya civilians during the 2017 clearance operations, including documented massacres at Min Gyi (Tula Toli), Chut Pyin, Maung Nu, and Gu Dar Pyin.'
+        },
+        {
+          num: 205,
+          page: 3,
+          group: 'actus-reus',
+          cardId: 'card-actus-2a',
+          title: 'IV. Actus Reus: Scale of Mortality (~10,000 Killed)',
+          tag: '~10,000 Killed Estimate',
+          significance: 'Accepts the estimate of approximately 10,000 Rohingya killed as credibly supported; Article II(a) is established.',
+          text: 'While Myanmar’s refusal to grant access to independent investigators prevents fixing an exact toll, the Court finds that the estimate of approximately 10,000 Rohingya killed during the 2017 clearance operations is credibly supported by corroborated demographic, medical, and eyewitness evidence. The actus reus under Article II(a) is therefore established.'
+        },
+        {
+          num: 231,
+          page: 3,
+          group: 'actus-reus',
+          cardId: 'card-actus-2b',
+          title: 'IV. Actus Reus: Article II(b) Serious Bodily or Mental Harm',
+          tag: 'Art. II(b) Serious Harm',
+          significance: 'Establishes systematic mass gang rape, SGBV, torture, and brutalization of children under Article II(b).',
+          text: 'The evidentiary record establishes pervasive mass gang rape and sexual and gender-based violence against Rohingya women and girls, severe torture, beatings, and the deliberate brutalization of children. Inflicted on a systematic scale, these acts caused grave, lasting physical and mental harm contributing to the destruction of the group under Article II(b).'
+        },
+        {
+          num: 264,
+          page: 4,
+          group: 'actus-reus',
+          cardId: 'card-actus-2c',
+          title: 'IV. Actus Reus: Article II(c) Destructive Conditions of Life',
+          tag: 'Art. II(c) Conditions',
+          significance: 'Establishes Article II(c) through systematic village razing, crop destruction, and deliberate food and shelter denial.',
+          text: 'The Court finds that the coordinated clearance operations—comprising the systematic razing of Rohingya villages, destruction of food stores, crops, and livestock, and deliberate deprivation of shelter and medical relief—inflicted conditions of life calculated to bring about the physical destruction of the group in part within the meaning of Article II(c).'
+        },
+        {
+          num: 298,
+          page: 4,
+          group: 'actus-reus',
+          cardId: 'card-actus-2d',
+          title: 'IV. Actus Reus: Article II(d) Measures to Prevent Births',
+          tag: 'Art. II(d) Prevent Births',
+          significance: 'Clarifies biological renewal scope under Article II(d) and evaluates trauma from mass sexual violence.',
+          text: 'Measures intended to prevent births under Article II(d) encompass both physical and mental acts deliberately impairing a group’s capacity to renew itself. While the Court notes the grave reproductive trauma caused by mass sexual violence, sex-separation, and attacks on pregnant women, it stresses that Article II(d) requires strict proof of specific intent to prevent births.'
+        },
+        {
+          num: 315,
+          page: 4,
+          group: 'actus-reus',
+          cardId: 'card-actus-2e',
+          title: 'IV. Actus Reus: Article II(e) Forcible Transfer of Children',
+          tag: 'Art. II(e) Not Established',
+          significance: 'Concludes the legal threshold for forcible transfer of children to another group was not established.',
+          text: 'The evidentiary record does not establish the forcible transfer of Rohingya children to another group within the legal threshold of Article II(e) of the Convention, and The Gambia did not pursue a standalone finding under this subparagraph.'
+        },
+        {
+          num: 342,
+          page: 5,
+          group: 'intent',
+          cardId: 'card-intent-pillar1',
+          title: 'V. Circumstantial Pillar 1: Scale & Systematic Pattern',
+          tag: 'Pillar 1: Scale & Pattern',
+          significance: 'Uniform clearance modus operandi across three townships, including firing on fleeing civilians and border landmines.',
+          text: 'First, the clearance operations across Maungdaw, Buthidaung, and Rathedaung townships followed an identical modus operandi: pre-dawn encirclement, indiscriminate firing, mass killings, sexual violence, and arson. Forces fired on fleeing civilians, sank refugee boats on the Naf River, and planted anti-personnel landmines along border crossings—acts irreconcilable with mere expulsion.'
+        },
+        {
+          num: 378,
+          page: 5,
+          group: 'intent',
+          cardId: 'card-intent-pillar3',
+          title: 'V. Circumstantial Pillar 3: Selective Razing of Villages',
+          tag: 'Pillar 3: Targeted Razing',
+          significance: 'Over 390 Rohingya villages and mosques razed while adjacent non-Rohingya settlements were spared.',
+          text: 'Second, high-resolution satellite imagery and corroborated witness testimony confirm that over 390 Rohingya villages and mosques were partially or completely razed in a coordinated wave, while immediately adjacent non-Rohingya villages and religious structures remained untouched—demonstrating selective, group-targeted destruction.'
+        },
+        {
+          num: 412,
+          page: 5,
+          group: 'intent',
+          cardId: 'card-intent-pillar2',
+          title: 'V. Circumstantial Pillar 2: Dehumanizing Rhetoric',
+          tag: 'Pillar 2: Hate Speech',
+          significance: 'Official framing of Rohingya as “illegal Bengalis” and “unfinished business” alongside State-tolerated hate speech.',
+          text: 'Third, senior military officials and State-tolerated social-media networks disseminated pervasive dehumanizing rhetoric depicting the Rohingya as “illegal Bengalis,” invaders, and an existential threat, including public statements framing the 2017 clearance operations as “unfinished business.”'
+        },
+        {
+          num: 443,
+          page: 6,
+          group: 'intent',
+          cardId: 'card-intent-443',
+          title: 'VI. Landmark Coexistence Rule (Dolus Specialis)',
+          tag: 'Landmark Coexistence Rule',
+          significance: 'Genocidal intent need not be the sole objective; it may coexist with military or counter-insurgency aims.',
+          text: 'The Court holds that genocidal intent need not be the sole intention of a State; it may coexist alongside military, territorial, or counter-insurgency objectives, provided that such intentions are not incompatible with an intent to physically or biologically destroy the protected group in whole or in part.'
+        },
+        {
+          num: 456,
+          page: 6,
+          group: 'defenses',
+          cardId: 'card-defense-arsa',
+          title: 'VI. Rejection of Counter-Insurgency / ARSA Defense',
+          tag: 'ARSA Defense Rejected',
+          significance: 'Rejects Myanmar’s counter-insurgency defense as wildly disproportionate to the August 2017 ARSA attacks.',
+          text: 'Applying the principle in paragraph 443, the Court rejects Myanmar’s defense that the operations were lawful counter-insurgency measures against ARSA. Wholesale assaults on unarmed villages with zero ARSA presence, massacres of infants, and border landmines were wildly disproportionate and cannot be explained by security imperatives.'
+        },
+        {
+          num: 468,
+          page: 6,
+          group: 'defenses',
+          cardId: 'card-defense-plan',
+          title: 'VI. Rejection of “No Formal Plan” & Rogue-Unit Defenses',
+          tag: 'No-Plan Defense Rejected',
+          significance: 'Holds that a written blueprint is unnecessary; synchronized elite-division operations prove a coordinated State plan.',
+          text: 'The absence of a captured written directive or explicit State blueprint does not negate genocidal intent. The synchronized deployment of elite Light Infantry Divisions across hundreds of villages refutes Myanmar’s claim of isolated rogue units and conclusively establishes a coordinated State-level plan.'
+        },
+        {
+          num: 479,
+          page: 6,
+          group: 'intent',
+          cardId: 'card-intent-pillar4',
+          title: 'VI. Circumstantial Pillar 4: Systemic Impunity & Denial',
+          tag: 'Pillar 4: Impunity',
+          significance: 'Complete absence of credible domestic prosecutions and promotion of implicated commanders confirm dolus specialis.',
+          text: 'Fourth, Myanmar’s persistent refusal to investigate or prosecute senior commanders—coupled with blanket official denial and the retention and promotion of officers implicated in the 2017 atrocities—reinforces the conclusion that an intent to destroy the Rohingya group in part is the only reasonable inference.'
+        },
+        {
+          num: 504,
+          page: 7,
+          group: 'evidence-remedies',
+          cardId: 'card-rem-pm',
+          title: 'VII. Breach of 23 January 2020 Provisional Measures Order',
+          tag: '2020 PM Order Breach',
+          significance: 'Finds Myanmar breached the 2020 Order by failing to prevent harm, bulldozing crime sites, and submitting inadequate reports.',
+          text: 'By its binding Order of 23 January 2020, the Court directed Myanmar to prevent genocidal acts, preserve all relevant evidence, and submit regular compliance reports. Satellite imagery establishes that Myanmar bulldozed razed Rohingya villages and constructed military bases over crime sites while submitting inadequate reports, breaching the Order.'
+        },
+        {
+          num: 521,
+          page: 7,
+          group: 'evidence-remedies',
+          cardId: 'card-rem-reparations',
+          title: 'VII. Cessation, Non-Repetition & Full Reparation',
+          tag: 'Reparations & 2-Yr Report',
+          significance: 'Orders cessation, safe voluntary return, non-discriminatory citizenship access, full reparation, and a 2-year report.',
+          text: 'As a legal consequence of its internationally wrongful acts, Myanmar must cease all ongoing violations, provide guarantees of non-repetition, enable the safe, voluntary, and dignified return of displaced Rohingya with non-discriminatory access to citizenship, make full reparation, and submit a compliance report within two years.'
+        },
+        {
+          num: 542,
+          page: 7,
+          group: 'evidence-remedies',
+          cardId: 'card-rem-reparations',
+          title: 'VII. Direct State Responsibility for Genocide',
+          tag: 'Direct State Responsibility',
+          significance: 'Holds Myanmar directly responsible under international law for committing genocide against the Rohingya.',
+          text: 'For the foregoing reasons, the Court concludes that the Republic of the Union of Myanmar bears direct international responsibility for the commission of genocide against the Rohingya group in breach of Articles II and III of the Genocide Convention.'
+        },
+        {
+          num: 568,
+          page: 7,
+          group: 'evidence-remedies',
+          cardId: 'card-rem-reparations',
+          title: 'VII. Formal Operative Clause (Dispositif)',
+          tag: 'Operative Dispositif',
+          significance: 'Formal operative holdings on genocide commission, 2020 Provisional Measures breach, cessation, and reparations.',
+          text: 'OPERATIVE CLAUSE — THE COURT: (1) Finds that Myanmar breached its obligations under the Genocide Convention by committing genocide against the Rohingya group; (2) Finds that Myanmar breached the Order on Provisional Measures of 23 January 2020; (3) Decides that Myanmar must cease ongoing violations, guarantee non-repetition, make full reparation, and submit a compliance report within two years.'
+        }
+      ];
+
+      // O(1) Lookup Registry
+      const PARA_MAP = new Map();
+      PARAGRAPHS.forEach((p, idx) => {
+        p.index = idx;
+        PARA_MAP.set(p.num, p);
+      });
+
+      const GROUP_IDS = ['actus-reus', 'intent', 'defenses', 'evidence-remedies'];
+
+      /* ===================================================================
+       * 2. APPLICATION STATE & DOM REFERENCES
+       * =================================================================== */
+      const state = {
+        activeParaNum: 443,
+        activeGroup: 'actus-reus',
+        pdfMode: 'annotated', // 'annotated' | 'upload'
+        zoom: 100,
+        // Local PDF.js state
+        pdfDoc: null,
+        pdfFileName: '',
+        pdfPageTexts: [],
+        pdfRenderedPages: new Set(),
+        pdfPageViewports: new Map(),
+      };
+
+      const els = {
+        leftPane: document.getElementById('leftPane'),
+        rightPane: document.getElementById('rightPane'),
+        splitResizer: document.getElementById('splitResizer'),
+        mobileBtnExplorer: document.getElementById('mobileBtnExplorer'),
+        mobileBtnPdf: document.getElementById('mobileBtnPdf'),
+        quickJumpBar: document.getElementById('quickJumpBar'),
+        quickJumpInput: document.getElementById('quickJumpInput'),
+        quickJumpGoBtn: document.getElementById('quickJumpGoBtn'),
+        quickJumpDropdown: document.getElementById('quickJumpDropdown'),
+        quickJumpStrip: document.getElementById('quickJumpStrip'),
+        sectionQuickNav: document.getElementById('sectionQuickNav'),
+        sectionNavPills: document.querySelectorAll('.section-nav-pill'),
+        rulingGroups: document.querySelectorAll('.ruling-group'),
+        explorerScroll: document.getElementById('explorerScroll'),
+        // PDF Pane
+        modeAnnotatedBtn: document.getElementById('modeAnnotatedBtn'),
+        modeUploadBtn: document.getElementById('modeUploadBtn'),
+        zoomOutBtn: document.getElementById('zoomOutBtn'),
+        zoomInBtn: document.getElementById('zoomInBtn'),
+        zoomLabel: document.getElementById('zoomLabel'),
+        pdfPageBadge: document.getElementById('pdfPageBadge'),
+        activeCitationInspector: document.getElementById('activeCitationInspector'),
+        inspectorParaNum: document.getElementById('inspectorParaNum'),
+        inspectorTitle: document.getElementById('inspectorTitle'),
+        inspectorSignificance: document.getElementById('inspectorSignificance'),
+        stepperCount: document.getElementById('stepperCount'),
+        prevParaBtn: document.getElementById('prevParaBtn'),
+        nextParaBtn: document.getElementById('nextParaBtn'),
+        locateInExplorerBtn: document.getElementById('locateInExplorerBtn'),
+        pdfViewport: document.getElementById('pdfViewport'),
+        annotatedPdfContainer: document.getElementById('annotatedPdfContainer'),
+        localPdfContainer: document.getElementById('localPdfContainer'),
+        localPdfInput: document.getElementById('localPdfInput'),
+        localPdfDropZone: document.getElementById('localPdfDropZone'),
+        localPdfSelectBtn: document.getElementById('localPdfSelectBtn'),
+        pdfjsAvailabilityNote: document.getElementById('pdfjsAvailabilityNote'),
+        localPdfProgressWrap: document.getElementById('localPdfProgressWrap'),
+        localPdfProgressLabel: document.getElementById('localPdfProgressLabel'),
+        localPdfProgressPct: document.getElementById('localPdfProgressPct'),
+        localPdfProgressBar: document.getElementById('localPdfProgressBar'),
+        localPdfPagesHost: document.getElementById('localPdfPagesHost'),
+        // QA Audit Drawer
+        openQaAuditBtn: document.getElementById('openQaAuditBtn'),
+        qaHeaderStatusPill: document.getElementById('qaHeaderStatusPill'),
+        qaAuditBackdrop: document.getElementById('qaAuditBackdrop'),
+        closeQaDrawerBtn: document.getElementById('closeQaDrawerBtn'),
+        rerunQaBtn: document.getElementById('rerunQaBtn'),
+        smokeTestJumpBtn: document.getElementById('smokeTestJumpBtn'),
+        qaSummaryBadge: document.getElementById('qaSummaryBadge'),
+        qaTotalTime: document.getElementById('qaTotalTime'),
+        qaResultsList: document.getElementById('qaResultsList'),
+        // Tooltip & Toast
+        tooltip: document.getElementById('paraTooltip'),
+        tooltipTitle: document.getElementById('tooltipTitle'),
+        tooltipTag: document.getElementById('tooltipTag'),
+        tooltipBody: document.getElementById('tooltipBody'),
+        toastHost: document.getElementById('toastHost'),
+      };
+
+      /* ===================================================================
+       * 3. TOAST HELPER (Zero alert/confirm)
+       * =================================================================== */
+      function showToast(msg, tone = 'info') {
+        const toneClasses = {
+          info: 'bg-icj-navy border-amber-400/60 text-white',
+          success: 'bg-emerald-900 border-emerald-400 text-emerald-50',
+          warn: 'bg-amber-900 border-amber-400 text-amber-50',
+          error: 'bg-rose-900 border-rose-400 text-rose-50',
+        };
+        const el = document.createElement('div');
+        el.className = `pointer-events-auto max-w-xs px-3.5 py-2 rounded-xl border shadow-xl text-xs font-medium transition-all duration-300 ${toneClasses[tone] || toneClasses.info}`;
+        el.textContent = msg;
+        els.toastHost.appendChild(el);
+        setTimeout(() => {
+          el.style.opacity = '0';
+          el.style.transform = 'translateY(6px)';
+          setTimeout(() => el.remove(), 280);
+        }, 3000);
+      }
+
+      /* ===================================================================
+       * 4. DYNAMIC RENDERERS (QUICK JUMP STRIP & 7 A4 ANNOTATED PDF PAGES)
+       * =================================================================== */
+      function renderQuickJumpStrip() {
+        els.quickJumpStrip.innerHTML = '';
+        PARAGRAPHS.forEach((p) => {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'quick-pill';
+          btn.dataset.jumpPara = String(p.num);
+          btn.title = `Para. ${p.num} — ${p.tag}`;
+          btn.textContent = `¶ ${p.num}`;
+          els.quickJumpStrip.appendChild(btn);
+        });
+      }
+
+      const PAGE_SECTION_HEADERS = {
+        1: 'I. MERITS MANDATE, ATTRIBUTION & INTERVENERS',
+        2: 'II–III. EVIDENTIARY STANDARDS & PROTECTED GROUP',
+        3: 'IV. ACTUS REUS — ARTICLES II(a)–(b)',
+        4: 'IV. ACTUS REUS — ARTICLES II(c)–(e)',
+        5: 'V. CIRCUMSTANTIAL PILLARS OF GENOCIDAL INTENT',
+        6: 'VI. COEXISTENCE RULE & MYANMAR’S DEFENSES',
+        7: 'VII. PROVISIONAL MEASURES, REPARATIONS & DISPOSITIF',
+      };
+
+      function renderAnnotatedPdfPages() {
+        els.annotatedPdfContainer.innerHTML = '';
+        const pages = new Map();
+        for (let i = 1; i <= 7; i++) pages.set(i, []);
+        PARAGRAPHS.forEach((p) => pages.get(p.page).push(p));
+
+        pages.forEach((parasOnPage, pageNum) => {
+          const article = document.createElement('article');
+          article.className = 'icj-page px-8 sm:px-12 py-9 flex flex-col justify-between';
+          article.dataset.page = String(pageNum);
+          article.id = `annotated-page-${pageNum}`;
+
+          let coverHtml = '';
+          if (pageNum === 1) {
+            coverHtml = `
+              <div class="text-center border-b-2 border-slate-900 pb-5 mb-6">
+                <div class="text-[11px] tracking-[0.22em] uppercase font-semibold text-slate-700">International Court of Justice</div>
+                <div class="text-[10px] tracking-[0.15em] uppercase text-slate-500 mt-0.5">Reports of Judgments, Advisory Opinions and Orders</div>
+                <h2 class="text-lg sm:text-xl font-bold tracking-wide uppercase text-slate-900 mt-4 leading-snug">
+                  Application of the Convention on the Prevention<br/>and Punishment of the Crime of Genocide
+                </h2>
+                <div class="text-sm sm:text-base font-semibold text-slate-800 mt-1">(The Gambia <em>v.</em> Myanmar: 11 States Intervening)</div>
+                <div class="inline-block border-y border-slate-400 py-1.5 px-6 mt-4 text-xs sm:text-sm font-bold tracking-widest uppercase">
+                  Judgment of 19 November 2026
+                </div>
+              </div>
+            `;
+          }
+
+          let bodyHtml = '';
+          parasOnPage.forEach((p) => {
+            bodyHtml += `
+              <div class="mb-5">
+                <div class="text-[11px] font-sans font-bold uppercase tracking-wider text-icj-navy/80 mb-1">${p.title}</div>
+                <div id="pdf-para-${p.num}" class="pdf-para text-[14.5px] text-justify" data-pdf-para="${p.num}">
+                  <span class="pdf-para-num">¶ ${p.num}</span>${p.text}
+                </div>
+              </div>
+            `;
+          });
+
+          article.innerHTML = `
+            <div>
+              <div class="flex items-center justify-between text-[10px] tracking-[0.12em] uppercase text-slate-500 border-b border-slate-300 pb-2 mb-5 font-sans">
+                <span>ICJ REPORTS (2026)</span>
+                <span class="font-semibold text-slate-700 truncate ml-2">${PAGE_SECTION_HEADERS[pageNum]}</span>
+              </div>
+              ${coverHtml}
+              <div>${bodyHtml}</div>
+            </div>
+            <div class="flex items-center justify-between text-[10px] text-slate-400 border-t border-slate-200 pt-2 mt-6 font-sans">
+              <span>The Gambia v. Myanmar — 19 November 2026</span>
+              <span class="font-semibold text-slate-600">Page ${pageNum} of 7</span>
+            </div>
+          `;
+
+          els.annotatedPdfContainer.appendChild(article);
+        });
+
+        // Bidirectional PDF -> Single-Page Explorer Click Binding
+        els.annotatedPdfContainer.querySelectorAll('.pdf-para').forEach((el) => {
+          el.addEventListener('click', () => {
+            const num = parseInt(el.dataset.pdfPara, 10);
+            jumpToParagraph(num, { syncLeft: true, flashCard: true, switchMobileToPdf: false });
+          });
+        });
+      }
+
+      /* ===================================================================
+       * 5. STICKY SECTION QUICK-NAV & SCROLL-SPY ENGINE
+       * =================================================================== */
+      function setActiveSectionPill(groupId) {
+        state.activeGroup = groupId;
+        els.sectionNavPills.forEach((pill) => {
+          const active = pill.dataset.scrollGroup === groupId;
+          pill.classList.toggle('active-section-pill', active);
+          if (active) {
+            pill.scrollIntoView({ behavior: 'auto', inline: 'nearest', block: 'nearest' });
+          }
+        });
+      }
+
+      function scrollToRulingGroup(groupId) {
+        const target = document.getElementById(`group-${groupId}`);
+        if (!target) return;
+        setActiveSectionPill(groupId);
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+
+      function updateScrollSpy() {
+        const scrollTop = els.explorerScroll.scrollTop;
+        const containerTop = els.explorerScroll.getBoundingClientRect().top;
+        let currentGroup = GROUP_IDS[0];
+
+        els.rulingGroups.forEach((sec) => {
+          const rect = sec.getBoundingClientRect();
+          if (rect.top - containerTop <= 90) {
+            currentGroup = sec.dataset.rulingGroup;
+          }
+        });
+
+        // If scrolled to the very bottom, highlight last section
+        if (scrollTop + els.explorerScroll.clientHeight >= els.explorerScroll.scrollHeight - 16) {
+          currentGroup = GROUP_IDS[GROUP_IDS.length - 1];
+        }
+
+        if (currentGroup !== state.activeGroup) {
+          setActiveSectionPill(currentGroup);
+        }
+      }
+
+      /* ===================================================================
+       * 6. CORE NAVIGATION, BIDIRECTIONAL SYNC & SEARCH ENGINE
+       * =================================================================== */
+      function jumpToParagraph(paraNum, options = {}) {
+        const {
+          syncLeft = false,
+          flashCard = false,
+          switchMobileToPdf = true,
+          smooth = true
+        } = options;
+
+        const para = PARA_MAP.get(Number(paraNum));
+        if (!para) return false;
+
+        state.activeParaNum = para.num;
+
+        // 1. Update Active Citation Inspector Bar
+        els.inspectorParaNum.textContent = `Para. ${para.num}`;
+        els.inspectorTitle.textContent = `${para.tag} — ${para.title}`;
+        els.inspectorSignificance.textContent = para.significance;
+        els.stepperCount.textContent = `${para.index + 1} / ${PARAGRAPHS.length}`;
+        if (state.pdfMode === 'annotated') {
+          els.pdfPageBadge.textContent = `Page ${para.page} / 7`;
+        }
+
+        // 2. Sync Quick Jump Pills & Inline Chips
+        document.querySelectorAll('.quick-pill').forEach((pill) => {
+          const isMatch = Number(pill.dataset.jumpPara) === para.num;
+          pill.classList.toggle('active-pill', isMatch);
+          if (isMatch) {
+            pill.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto', inline: 'nearest', block: 'nearest' });
+          }
+        });
+
+        document.querySelectorAll('.para-chip').forEach((chip) => {
+          chip.classList.toggle('active-chip', Number(chip.dataset.jumpPara) === para.num);
+        });
+
+        // 3. Sync Ruling Card "Viewing in PDF" State
+        document.querySelectorAll('.ruling-card').forEach((card) => {
+          const isMatch = card.id === para.cardId || Number(card.dataset.jumpPara) === para.num;
+          card.classList.toggle('is-viewing', isMatch);
+        });
+
+        // 4. Bidirectional Sync to Single-Page Left Explorer Pane
+        if (syncLeft) {
+          setActiveSectionPill(para.group);
+          const cardEl = document.getElementById(para.cardId);
+          if (cardEl) {
+            cardEl.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto', block: 'center' });
+            if (flashCard) {
+              cardEl.classList.remove('card-flash');
+              void cardEl.offsetWidth;
+              cardEl.classList.add('card-flash');
+            }
+          }
+        }
+
+        // 5. Mobile Pane Switch
+        if (switchMobileToPdf && window.innerWidth < 1024) {
+          setMobilePane('pdf');
+        }
+
+        // 6. Highlight & Scroll in Active PDF Mode
+        if (state.pdfMode === 'annotated') {
+          highlightAnnotatedPara(para, smooth);
+        } else {
+          highlightLocalPdfPara(para);
+        }
+
+        return true;
+      }
+
+      function highlightAnnotatedPara(para, smooth = true) {
+        els.annotatedPdfContainer.querySelectorAll('.pdf-para').forEach((el) => {
+          el.classList.remove('pdf-para-active', 'spotlight-pulse');
+          const oldTag = el.querySelector('.margin-tag');
+          if (oldTag) oldTag.remove();
+        });
+
+        const target = document.getElementById(`pdf-para-${para.num}`);
+        if (!target) return;
+
+        void target.offsetWidth;
+        target.classList.add('pdf-para-active', 'spotlight-pulse');
+
+        const tag = document.createElement('span');
+        tag.className = 'margin-tag';
+        tag.textContent = `¶ ${para.num} • ${para.tag}`;
+        target.appendChild(tag);
+
+        target.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto', block: 'center' });
+      }
+
+      function stepParagraph(delta, options = {}) {
+        const curr = PARA_MAP.get(state.activeParaNum) || PARAGRAPHS[0];
+        const nextIdx = (curr.index + delta + PARAGRAPHS.length) % PARAGRAPHS.length;
+        const nextPara = PARAGRAPHS[nextIdx];
+        jumpToParagraph(nextPara.num, {
+          syncLeft: options.syncLeft !== undefined ? options.syncLeft : true,
+          flashCard: false,
+          switchMobileToPdf: false,
+          smooth: options.smooth !== undefined ? options.smooth : true,
+        });
+        return nextPara.num;
+      }
+
+      function searchParagraphs(rawQuery) {
+        const q = String(rawQuery || '').trim().toLowerCase().replace(/^[¶§]\s*/, '').replace(/^para\.?\s*/i, '');
+        if (!q) return PARAGRAPHS.slice(0, 8);
+
+        const exactNum = Number(q);
+        const matches = PARAGRAPHS.filter((p) => {
+          if (!Number.isNaN(exactNum) && String(p.num).includes(q)) return true;
+          return (
+            p.tag.toLowerCase().includes(q) ||
+            p.title.toLowerCase().includes(q) ||
+            p.significance.toLowerCase().includes(q) ||
+            p.text.toLowerCase().includes(q)
+          );
+        });
+
+        matches.sort((a, b) => {
+          if (a.num === exactNum) return -1;
+          if (b.num === exactNum) return 1;
+          return a.num - b.num;
+        });
+
+        return matches;
+      }
+
+      function renderSearchDropdown(query) {
+        const results = searchParagraphs(query);
+        els.quickJumpDropdown.innerHTML = '';
+
+        if (results.length === 0) {
+          els.quickJumpDropdown.innerHTML = `
+            <div class="p-3 text-xs text-slate-500">No matching paragraph found for "${query}". Try 443, 134, 182, 542, or "coexistence".</div>
+          `;
+          els.quickJumpDropdown.classList.remove('hidden');
+          return;
+        }
+
+        results.slice(0, 8).forEach((p) => {
+          const item = document.createElement('button');
+          item.type = 'button';
+          item.className = 'w-full text-left px-3 py-2 hover:bg-amber-50 flex items-start gap-2.5 transition cursor-pointer';
+          item.innerHTML = `
+            <span class="px-1.5 py-0.5 rounded bg-icj-navy text-amber-300 font-bold text-[10px] shrink-0 mt-0.5">¶ ${p.num}</span>
+            <div class="min-w-0">
+              <div class="text-xs font-bold text-slate-800 truncate">${p.tag} <span class="font-normal text-slate-400">• Page ${p.page}</span></div>
+              <div class="text-[11px] text-slate-500 truncate">${p.significance}</div>
+            </div>
+          `;
+          item.addEventListener('click', () => {
+            els.quickJumpDropdown.classList.add('hidden');
+            els.quickJumpInput.value = '';
+            jumpToParagraph(p.num, { syncLeft: true, flashCard: true, switchMobileToPdf: true });
+          });
+          els.quickJumpDropdown.appendChild(item);
+        });
+        els.quickJumpDropdown.classList.remove('hidden');
+      }
+
+      /* ===================================================================
+       * 7. VIEWPORT-AWARE HOVER TOOLTIPS FOR INLINE CHIPS
+       * =================================================================== */
+      function getFirstSentence(text) {
+        const match = text.match(/^[^.!?]+[.!?]/);
+        return match ? match[0] : text.slice(0, 140) + '...';
+      }
+
+      function showTooltipForChip(chipEl) {
+        const num = Number(chipEl.dataset.jumpPara);
+        const para = PARA_MAP.get(num);
+        if (!para) return;
+
+        els.tooltipTitle.textContent = `Para. ${para.num} • Page ${para.page}`;
+        els.tooltipTag.textContent = para.tag;
+        els.tooltipBody.textContent = `“${getFirstSentence(para.text)}”`;
+        els.tooltip.classList.remove('hidden');
+
+        const rect = chipEl.getBoundingClientRect();
+        const tipW = els.tooltip.offsetWidth || 300;
+        const tipH = els.tooltip.offsetHeight || 82;
+
+        let left = rect.left + rect.width / 2 - tipW / 2;
+        left = Math.max(10, Math.min(window.innerWidth - tipW - 10, left));
+        let top = rect.top - tipH - 10;
+        if (top < 10) top = rect.bottom + 10;
+
+        els.tooltip.style.left = `${left}px`;
+        els.tooltip.style.top = `${top}px`;
+        els.tooltip.style.opacity = '1';
+      }
+
+      function hideTooltip() {
+        els.tooltip.style.opacity = '0';
+        els.tooltip.classList.add('hidden');
+      }
+
+      document.addEventListener('mouseover', (e) => {
+        const chip = e.target.closest('.para-chip');
+        if (chip) showTooltipForChip(chip);
+      });
+      document.addEventListener('mouseout', (e) => {
+        if (e.target.closest('.para-chip')) hideTooltip();
+      });
+
+      /* ===================================================================
+       * 8. DUAL-MODE PDF VIEWER & LOCAL PDF.js ENGINE
+       * =================================================================== */
+      function setPdfMode(mode) {
+        state.pdfMode = mode;
+        const isAnnotated = mode === 'annotated';
+
+        els.modeAnnotatedBtn.className = isAnnotated
+          ? 'px-2.5 py-1 text-xs font-bold rounded-md bg-amber-400 text-icj-navy transition cursor-pointer'
+          : 'px-2.5 py-1 text-xs font-semibold rounded-md text-slate-300 hover:text-white transition cursor-pointer';
+
+        els.modeUploadBtn.className = !isAnnotated
+          ? 'px-2.5 py-1 text-xs font-bold rounded-md bg-amber-400 text-icj-navy transition cursor-pointer'
+          : 'px-2.5 py-1 text-xs font-semibold rounded-md text-slate-300 hover:text-white transition cursor-pointer';
+
+        els.annotatedPdfContainer.classList.toggle('hidden', !isAnnotated);
+        els.localPdfContainer.classList.toggle('hidden', isAnnotated);
+
+        if (!isAnnotated && !window.pdfjsLib) {
+          els.pdfjsAvailabilityNote.textContent = 'Note: PDF.js CDN appears offline. Annotated Judgment PDF remains 100% functional.';
+          els.pdfjsAvailabilityNote.classList.remove('hidden');
+        } else {
+          els.pdfjsAvailabilityNote.classList.add('hidden');
+        }
+
+        if (isAnnotated) {
+          const active = PARA_MAP.get(state.activeParaNum) || PARAGRAPHS[0];
+          els.pdfPageBadge.textContent = `Page ${active.page} / 7`;
+        } else {
+          els.pdfPageBadge.textContent = state.pdfDoc ? `Local PDF (${state.pdfDoc.numPages} pp.)` : 'No Local PDF';
+        }
+      }
+
+      function setZoom(newZoom) {
+        state.zoom = Math.max(75, Math.min(145, newZoom));
+        els.zoomLabel.textContent = `${state.zoom}%`;
+        if (state.pdfMode === 'annotated') {
+          els.annotatedPdfContainer.style.transform = `scale(${state.zoom / 100})`;
+        } else if (state.pdfDoc) {
+          state.pdfRenderedPages.clear();
+          renderLocalPdfPage(1);
+        }
+      }
+
+      async function handleLocalPdfUpload(file) {
+        if (!file || file.type !== 'application/pdf') {
+          showToast('Please select a valid PDF document.', 'error');
+          return;
+        }
+        if (!window.pdfjsLib) {
+          showToast('PDF.js library is unavailable offline. Use Annotated Judgment PDF mode.', 'warn');
+          return;
+        }
+
+        try {
+          setPdfMode('upload');
+          state.pdfFileName = file.name;
+          const buffer = await file.arrayBuffer();
+          state.pdfDoc = await pdfjsLib.getDocument({ data: buffer }).promise;
+          state.pdfPageTexts = new Array(state.pdfDoc.numPages);
+          state.pdfRenderedPages.clear();
+          state.pdfPageViewports.clear();
+
+          els.localPdfDropZone.classList.add('hidden');
+          els.localPdfPagesHost.innerHTML = '';
+          els.pdfPageBadge.textContent = `Local PDF (${state.pdfDoc.numPages} pp.)`;
+
+          const io = new IntersectionObserver(
+            (entries) => {
+              entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                  renderLocalPdfPage(Number(entry.target.dataset.page));
+                }
+              });
+            },
+            { root: els.pdfViewport, rootMargin: '350px 0px' }
+          );
+
+          for (let i = 1; i <= state.pdfDoc.numPages; i++) {
+            const wrap = document.createElement('div');
+            wrap.className = 'pdfjs-page-wrapper flex items-center justify-center text-xs text-slate-400';
+            wrap.dataset.page = String(i);
+            wrap.id = `local-pdf-page-${i}`;
+            wrap.style.width = '700px';
+            wrap.style.minHeight = '920px';
+            wrap.textContent = `Rendering page ${i} of ${state.pdfDoc.numPages}...`;
+            els.localPdfPagesHost.appendChild(wrap);
+            io.observe(wrap);
+          }
+
+          showToast(`Loaded "${file.name}" (${state.pdfDoc.numPages} pages). Indexing text...`, 'success');
+          await indexLocalPdfPages();
+        } catch (err) {
+          console.error(err);
+          showToast('Unable to render this PDF. Verify it is not corrupted or password-protected.', 'error');
+        }
+      }
+
+      async function renderLocalPdfPage(pageNum) {
+        if (!state.pdfDoc || state.pdfRenderedPages.has(pageNum)) return;
+        state.pdfRenderedPages.add(pageNum);
+
+        try {
+          const page = await state.pdfDoc.getPage(pageNum);
+          const scale = (state.zoom / 100) * 1.25;
+          const viewport = page.getViewport({ scale });
+          state.pdfPageViewports.set(pageNum, viewport);
+
+          const wrap = document.getElementById(`local-pdf-page-${pageNum}`);
+          if (!wrap) return;
+          wrap.innerHTML = '';
+          wrap.style.width = `${viewport.width}px`;
+          wrap.style.height = `${viewport.height}px`;
+          wrap.style.minHeight = 'unset';
+
+          const canvas = document.createElement('canvas');
+          canvas.width = viewport.width;
+          canvas.height = viewport.height;
+          canvas.className = 'block';
+
+          const hlLayer = document.createElement('div');
+          hlLayer.className = 'local-hl-layer absolute inset-0 pointer-events-none';
+          hlLayer.id = `local-hl-${pageNum}`;
+
+          wrap.appendChild(canvas);
+          wrap.appendChild(hlLayer);
+
+          await page.render({ canvasContext: canvas.getContext('2d'), viewport }).promise;
+        } catch (err) {
+          console.error(`Error rendering page ${pageNum}:`, err);
+        }
+      }
+
+      async function indexLocalPdfPages() {
+        if (!state.pdfDoc) return;
+        els.localPdfProgressWrap.classList.remove('hidden');
+        const total = state.pdfDoc.numPages;
+
+        for (let i = 1; i <= total; i++) {
+          try {
+            const page = await state.pdfDoc.getPage(i);
+            const tc = await page.getTextContent();
+            const fullText = tc.items.map((it) => it.str).join(' ');
+            state.pdfPageTexts[i - 1] = {
+              pageNum: i,
+              lowerText: fullText.toLowerCase(),
+              items: tc.items,
+            };
+          } catch (_) {
+            state.pdfPageTexts[i - 1] = { pageNum: i, lowerText: '', items: [] };
+          }
+          if (i % 4 === 0 || i === total) {
+            const pct = Math.round((i / total) * 100);
+            els.localPdfProgressPct.textContent = `${pct}%`;
+            els.localPdfProgressBar.style.width = `${pct}%`;
+          }
+        }
+        els.localPdfProgressLabel.textContent = `Indexed ${total} pages — click any citation to highlight!`;
+        setTimeout(() => els.localPdfProgressWrap.classList.add('hidden'), 2200);
+      }
+
+      async function highlightLocalPdfPara(para) {
+        if (!state.pdfDoc) {
+          showToast('Upload a local PDF first, or switch to Annotated Judgment PDF.', 'warn');
+          return;
+        }
+
+        document.querySelectorAll('.local-hl-layer').forEach((l) => (l.innerHTML = ''));
+
+        const terms = [`${para.num}.`, String(para.num), para.tag.toLowerCase()];
+        let found = null;
+        for (const t of terms) {
+          const needle = t.toLowerCase();
+          for (const pObj of state.pdfPageTexts) {
+            if (pObj && pObj.lowerText.includes(needle)) {
+              found = { pObj, needle };
+              break;
+            }
+          }
+          if (found) break;
+        }
+
+        if (!found) {
+          showToast(`No exact match for Para. ${para.num} in "${state.pdfFileName}".`, 'warn');
+          return;
+        }
+
+        const targetPage = found.pObj.pageNum;
+        els.pdfPageBadge.textContent = `Page ${targetPage} / ${state.pdfDoc.numPages}`;
+        const wrap = document.getElementById(`local-pdf-page-${targetPage}`);
+        if (wrap) wrap.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+        await renderLocalPdfPage(targetPage);
+        const viewport = state.pdfPageViewports.get(targetPage);
+        const hlLayer = document.getElementById(`local-hl-${targetPage}`);
+        if (!viewport || !hlLayer) return;
+
+        let boxes = 0;
+        found.pObj.items.forEach((item) => {
+          if ((item.str || '').toLowerCase().includes(found.needle)) {
+            const tx = pdfjsLib.Util.transform(viewport.transform, item.transform);
+            const fontH = Math.hypot(tx[2], tx[3]) || 12;
+            const width = (item.width || 40) * viewport.scale;
+            const box = document.createElement('div');
+            box.className = 'pdfjs-highlight-box';
+            box.style.left = `${Math.max(0, tx[4] - 2)}px`;
+            box.style.top = `${Math.max(0, tx[5] - fontH - 2)}px`;
+            box.style.width = `${Math.max(24, width + 4)}px`;
+            box.style.height = `${fontH + 5}px`;
+            hlLayer.appendChild(box);
+            boxes++;
+          }
+        });
+
+        showToast(`Highlighted Para. ${para.num} on Page ${targetPage} (${boxes} match region${boxes === 1 ? '' : 's'}).`, 'success');
+      }
+
+      /* ===================================================================
+       * 9. MOBILE PANE SWITCHER
+       * =================================================================== */
+      function setMobilePane(pane) {
+        if (pane === 'explorer') {
+          els.leftPane.classList.remove('hidden');
+          els.rightPane.classList.add('hidden');
+          els.mobileBtnExplorer.className = 'px-2.5 py-1 text-[11px] font-bold rounded-md bg-amber-400 text-icj-navy transition';
+          els.mobileBtnPdf.className = 'px-2.5 py-1 text-[11px] font-bold rounded-md text-slate-300 transition';
+        } else {
+          els.leftPane.classList.add('hidden');
+          els.rightPane.classList.remove('hidden');
+          els.rightPane.classList.add('flex');
+          els.mobileBtnPdf.className = 'px-2.5 py-1 text-[11px] font-bold rounded-md bg-amber-400 text-icj-navy transition';
+          els.mobileBtnExplorer.className = 'px-2.5 py-1 text-[11px] font-bold rounded-md text-slate-300 transition';
+        }
+      }
+
+      /* ===================================================================
+       * 10. BUILT-IN LIVE UI QUALITY AUDIT ENGINE (8 SINGLE-PAGE ASSERTIONS)
+       * =================================================================== */
+      function runQaAudit() {
+        const suiteStart = performance.now();
+        const results = [];
+
+        const savedPara = state.activeParaNum;
+        const savedMode = state.pdfMode;
+        const savedScrollTop = els.explorerScroll.scrollTop;
+
+        function recordCheck(name, fn) {
+          const t0 = performance.now();
+          try {
+            const detail = fn();
+            results.push({
+              name,
+              passed: detail.passed,
+              metrics: detail.metrics,
+              error: detail.error || null,
+              ms: Math.max(0.1, performance.now() - t0).toFixed(1),
+            });
+          } catch (err) {
+            results.push({
+              name,
+              passed: false,
+              metrics: 'Unhandled exception during check',
+              error: err.message,
+              ms: Math.max(0.1, performance.now() - t0).toFixed(1),
+            });
+          }
+        }
+
+        // 1. Overview & Vote Removal Verified
+        recordCheck('1. Overview & Vote Removal Verified', () => {
+          const overviewTab = document.querySelector('#tab-overview, [data-tab="overview"], .explorer-tab');
+          const voteMatrix = document.querySelector('#judgeMatrixGrid, .vote-issue-btn');
+          const passed = !overviewTab && !voteMatrix;
+          return {
+            passed,
+            metrics: passed
+              ? 'Zero overview tabs, multi-tab switchers, or vote matrix nodes found in DOM'
+              : 'Legacy Overview/Vote elements still detected in DOM',
+            error: passed ? null : 'Unexpected legacy tab or vote matrix element found',
+          };
+        });
+
+        // 2. Single-Page Grouped Rulings Integrity
+        recordCheck('2. Single-Page Grouped Rulings Integrity', () => {
+          const missingOrHidden = [];
+          GROUP_IDS.forEach((g) => {
+            const sec = document.getElementById(`group-${g}`);
+            const visible = sec && !sec.classList.contains('hidden') && sec.offsetHeight > 0;
+            const hasCards = sec && sec.querySelectorAll('.ruling-card').length > 0;
+            if (!visible || !hasCards) missingOrHidden.push(g);
+          });
+          const navPills = document.querySelectorAll('.section-nav-pill').length;
+          return {
+            passed: missingOrHidden.length === 0 && navPills === 4,
+            metrics: `${4 - missingOrHidden.length}/4 ruling groups visible simultaneously on one page; ${navPills} sticky Quick-Nav pills`,
+            error: missingOrHidden.length ? `Hidden/missing groups: ${missingOrHidden.join(', ')}` : null,
+          };
+        });
+
+        // 3. 23-Paragraph Registry & PDF Target Integrity
+        recordCheck('3. 23-Paragraph Registry & PDF Target Integrity', () => {
+          const jumpEls = Array.from(document.querySelectorAll('[data-jump-para]'));
+          const missing = [];
+          jumpEls.forEach((el) => {
+            const n = el.dataset.jumpPara;
+            if (!document.getElementById(`pdf-para-${n}`)) missing.push(n);
+          });
+          const passed = PARAGRAPHS.length === 23 && jumpEls.length > 0 && missing.length === 0;
+          return {
+            passed,
+            metrics: `Registry: ${PARAGRAPHS.length}/23 paras | ${jumpEls.length - missing.length}/${jumpEls.length} triggers resolve to #pdf-para-{n}`,
+            error: missing.length ? `Missing PDF targets: ${missing.join(', ')}` : null,
+          };
+        });
+
+        // 4. Bidirectional PDF-to-Explorer Sync
+        recordCheck('4. Bidirectional PDF-to-Explorer Sync', () => {
+          const pdfParas = Array.from(document.querySelectorAll('[id^="pdf-para-"]'));
+          const broken = [];
+          pdfParas.forEach((el) => {
+            const num = Number(el.dataset.pdfPara);
+            const meta = PARA_MAP.get(num);
+            if (!meta) {
+              broken.push(`¶${num}`);
+              return;
+            }
+            const groupEl = document.getElementById(`group-${meta.group}`);
+            const cardEl = document.getElementById(meta.cardId);
+            if (!groupEl || !cardEl) broken.push(`¶${num}->${meta.cardId}`);
+          });
+
+          // Live click simulation on Para. 231 in PDF
+          const testPdfPara = document.getElementById('pdf-para-231');
+          let clickSyncOk = false;
+          if (testPdfPara) {
+            testPdfPara.click();
+            const linkedCard = document.getElementById('card-actus-2b');
+            clickSyncOk = state.activeParaNum === 231 && linkedCard && linkedCard.classList.contains('is-viewing');
+          }
+
+          return {
+            passed: pdfParas.length === 23 && broken.length === 0 && clickSyncOk,
+            metrics: `${pdfParas.length - broken.length}/23 PDF paragraphs map cleanly; live click on ¶231 highlighted #card-actus-2b: ${clickSyncOk ? 'OK' : 'FAIL'}`,
+            error: broken.length ? `Broken mappings: ${broken.join(', ')}` : (!clickSyncOk ? 'PDF paragraph click did not sync ruling card' : null),
+          };
+        });
+
+        // 5. Inline Chip Event Isolation
+        recordCheck('5. Inline Chip Event Isolation', () => {
+          const chips = Array.from(document.querySelectorAll('.para-chip'));
+          const invalid = chips.filter((c) => {
+            const p = PARA_MAP.get(Number(c.dataset.jumpPara));
+            return !p || !getFirstSentence(p.text).trim();
+          });
+
+          let isolationOk = false;
+          const diffChip = chips.find((c) => {
+            const parent = c.closest('.ruling-card');
+            return parent && parent.dataset.jumpPara !== c.dataset.jumpPara;
+          });
+          if (diffChip) {
+            const expected = Number(diffChip.dataset.jumpPara);
+            diffChip.click();
+            isolationOk = state.activeParaNum === expected;
+          } else {
+            isolationOk = true;
+          }
+
+          return {
+            passed: chips.length > 0 && invalid.length === 0 && isolationOk,
+            metrics: `${chips.length} inline .para-chip badges verified with tooltip previews; stopPropagation isolation: ${isolationOk ? 'OK' : 'FAIL'}`,
+            error: !isolationOk ? 'Inline chip click was overridden by parent card default paragraph' : null,
+          };
+        });
+
+        // 6. Prev/Next Stepper Wrap-Around & Active Inspector Sync
+        recordCheck('6. Prev/Next Stepper Wrap-Around & Active Inspector Sync', () => {
+          jumpToParagraph(PARAGRAPHS[0].num, { syncLeft: false, switchMobileToPdf: false, smooth: false });
+          const visited = [state.activeParaNum];
+          for (let i = 1; i < PARAGRAPHS.length; i++) {
+            visited.push(stepParagraph(1, { syncLeft: false, smooth: false }));
+          }
+          const wrappedNext = stepParagraph(1, { syncLeft: false, smooth: false });
+          const wrappedPrev = stepParagraph(-1, { syncLeft: false, smooth: false });
+
+          const orderOk = visited.every((num, idx) => num === PARAGRAPHS[idx].num);
+          const wrapOk = wrappedNext === PARAGRAPHS[0].num && wrappedPrev === PARAGRAPHS[PARAGRAPHS.length - 1].num;
+          const inspectorOk = els.inspectorParaNum.textContent.includes(String(wrappedPrev));
+
+          return {
+            passed: visited.length === 23 && orderOk && wrapOk && inspectorOk,
+            metrics: `Stepped ${visited.length}/23 in order; wrap 568→125 & 125→568: ${wrapOk ? 'OK' : 'FAIL'}; Inspector synced: ${inspectorOk ? 'OK' : 'FAIL'}`,
+            error: !(orderOk && wrapOk && inspectorOk) ? 'Stepper sequence or Inspector sync failed' : null,
+          };
+        });
+
+        // 7. Quick Jump Search & Autocomplete Accuracy
+        recordCheck('7. Quick Jump Search & Autocomplete Accuracy', () => {
+          const numHits = searchParagraphs('443');
+          const kwHits = searchParagraphs('coexistence');
+          const numOk = numHits.length > 0 && numHits[0].num === 443;
+          const kwOk = kwHits.length > 0 && kwHits[0].num === 443;
+          return {
+            passed: numOk && kwOk,
+            metrics: `Query "443" → ¶${numHits[0]?.num ?? 'none'} | Query "coexistence" → ¶${kwHits[0]?.num ?? 'none'}`,
+            error: !(numOk && kwOk) ? 'Expected Para. 443 as top search result' : null,
+          };
+        });
+
+        // 8. Layout Overflow & Dual-Mode PDF.js Toggle Integrity
+        recordCheck('8. Layout Overflow & Dual-Mode PDF.js Toggle Integrity', () => {
+          const leftOverflow = els.explorerScroll.scrollWidth - els.explorerScroll.clientWidth;
+          const rightVisible = els.rightPane.getBoundingClientRect().width > 0;
+          const rightOverflow = rightVisible ? (els.pdfViewport.scrollWidth - els.pdfViewport.clientWidth) : 0;
+
+          setPdfMode('upload');
+          const uploadVisible = !els.localPdfContainer.classList.contains('hidden');
+          const fileInputOk = !!els.localPdfInput && els.localPdfInput.type === 'file';
+          setPdfMode('annotated');
+          const annotatedVisible = !els.annotatedPdfContainer.classList.contains('hidden');
+
+          const passed = leftOverflow <= 2 && rightOverflow <= 2 && uploadVisible && fileInputOk && annotatedVisible;
+          return {
+            passed,
+            metrics: `Left overflow: ${Math.max(0, leftOverflow)}px | PDF overflow: ${Math.max(0, rightOverflow)}px | Dual-Mode Toggle: OK | PDF.js: ${window.pdfjsLib ? 'Loaded' : 'Fallback'}`,
+            error: !passed ? `Overflow or mode toggle failure (left=${leftOverflow}px, right=${rightOverflow}px)` : null,
+          };
+        });
+
+        // Restore original user state
+        setPdfMode(savedMode);
+        jumpToParagraph(savedPara, { syncLeft: false, switchMobileToPdf: false, smooth: false });
+        els.explorerScroll.scrollTop = savedScrollTop;
+
+        const totalMs = Math.max(0.5, performance.now() - suiteStart).toFixed(1);
+        renderQaResults(results, totalMs);
+      }
+
+      function renderQaResults(results, totalMs) {
+        const passCount = results.filter((r) => r.passed).length;
+        const allPassed = passCount === results.length;
+
+        els.qaHeaderStatusPill.textContent = `QA: ${passCount}/${results.length} ${allPassed ? 'Pass' : 'Fail'}`;
+        els.qaHeaderStatusPill.className = allPassed
+          ? 'px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500 text-white'
+          : 'px-1.5 py-0.5 rounded-full text-[10px] font-bold bg-rose-500 text-white';
+
+        els.qaSummaryBadge.textContent = allPassed ? `ALL ${passCount}/${results.length} PASSED` : `${passCount}/${results.length} PASSED`;
+        els.qaSummaryBadge.className = allPassed
+          ? 'px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500 text-white'
+          : 'px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-500 text-white';
+
+        els.qaTotalTime.textContent = `Completed in ${totalMs} ms`;
+        els.qaResultsList.innerHTML = '';
+
+        results.forEach((r) => {
+          const row = document.createElement('div');
+          row.className = `p-3.5 rounded-xl border ${
+            r.passed ? 'bg-emerald-50/50 border-emerald-200' : 'bg-rose-50/70 border-rose-300'
+          } space-y-1`;
+          row.innerHTML = `
+            <div class="flex items-center justify-between gap-2">
+              <div class="flex items-center gap-2 min-w-0">
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold shrink-0 ${
+                  r.passed ? 'bg-emerald-600 text-white' : 'bg-rose-600 text-white'
+                }">${r.passed ? 'PASS' : 'FAIL'}</span>
+                <span class="text-xs font-bold text-slate-900 truncate">${r.name}</span>
+              </div>
+              <span class="text-[10px] font-mono text-slate-500 shrink-0">${r.ms} ms</span>
+            </div>
+            <p class="text-[11px] text-slate-700 leading-snug">${r.metrics}</p>
+            ${r.error ? `<p class="text-[11px] font-semibold text-rose-700">Error: ${r.error}</p>` : ''}
+          `;
+          els.qaResultsList.appendChild(row);
+        });
+      }
+
+      function openQaDrawer() {
+        els.qaAuditBackdrop.classList.remove('hidden');
+        runQaAudit();
+      }
+
+      function closeQaDrawer() {
+        els.qaAuditBackdrop.classList.add('hidden');
+      }
+
+      /* ===================================================================
+       * 11. EVENT LISTENERS
+       * =================================================================== */
+      // Sticky Section Quick-Nav Pills & Scroll-Spy
+      els.sectionNavPills.forEach((pill) => {
+        pill.addEventListener('click', () => scrollToRulingGroup(pill.dataset.scrollGroup));
+      });
+      els.explorerScroll.addEventListener('scroll', updateScrollSpy, { passive: true });
+
+      // Delegated Click Handling: Inline .para-chip (stopPropagation) -> Quick Pills -> Whole Ruling Cards
+      document.addEventListener('click', (e) => {
+        if (!e.target.closest('#quickJumpInput') && !e.target.closest('#quickJumpDropdown')) {
+          els.quickJumpDropdown.classList.add('hidden');
+        }
+
+        // Priority 1: Inline .para-chip
+        const chip = e.target.closest('.para-chip');
+        if (chip && chip.dataset.jumpPara) {
+          e.stopPropagation();
+          hideTooltip();
+          jumpToParagraph(Number(chip.dataset.jumpPara), { syncLeft: false, switchMobileToPdf: true });
+          return;
+        }
+
+        // Priority 2: Quick Jump Bar Pill
+        const qPill = e.target.closest('.quick-pill');
+        if (qPill && qPill.dataset.jumpPara) {
+          jumpToParagraph(Number(qPill.dataset.jumpPara), { syncLeft: true, flashCard: true, switchMobileToPdf: true });
+          return;
+        }
+
+        // Priority 3: Whole Ruling Card
+        const card = e.target.closest('.ruling-card');
+        if (card && card.dataset.jumpPara) {
+          jumpToParagraph(Number(card.dataset.jumpPara), { syncLeft: false, switchMobileToPdf: true });
+        }
+      });
+
+      // Quick Jump Search Input & Autocomplete
+      els.quickJumpInput.addEventListener('input', (e) => renderSearchDropdown(e.target.value));
+      els.quickJumpInput.addEventListener('focus', () => renderSearchDropdown(els.quickJumpInput.value));
+      els.quickJumpInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          const hits = searchParagraphs(els.quickJumpInput.value);
+          if (hits.length > 0) {
+            els.quickJumpDropdown.classList.add('hidden');
+            els.quickJumpInput.value = '';
+            jumpToParagraph(hits[0].num, { syncLeft: true, flashCard: true, switchMobileToPdf: true });
+          } else {
+            showToast('No paragraph matched that query.', 'warn');
+          }
+        }
+      });
+      els.quickJumpGoBtn.addEventListener('click', () => {
+        const hits = searchParagraphs(els.quickJumpInput.value);
+        if (hits.length > 0) {
+          els.quickJumpDropdown.classList.add('hidden');
+          els.quickJumpInput.value = '';
+          jumpToParagraph(hits[0].num, { syncLeft: true, flashCard: true, switchMobileToPdf: true });
+        }
+      });
+
+      // Global Keyboard Shortcuts ('/', Escape, ArrowLeft, ArrowRight)
+      document.addEventListener('keydown', (e) => {
+        const tag = (document.activeElement && document.activeElement.tagName) || '';
+        const inInput = tag === 'INPUT' || tag === 'TEXTAREA';
+
+        if (e.key === '/' && !inInput) {
+          e.preventDefault();
+          els.quickJumpInput.focus();
+          return;
+        }
+        if (e.key === 'Escape') {
+          els.quickJumpDropdown.classList.add('hidden');
+          closeQaDrawer();
+          return;
+        }
+        if (!inInput && els.qaAuditBackdrop.classList.contains('hidden')) {
+          if (e.key === 'ArrowLeft') {
+            e.preventDefault();
+            stepParagraph(-1);
+          } else if (e.key === 'ArrowRight') {
+            e.preventDefault();
+            stepParagraph(1);
+          }
+        }
+      });
+
+      // Active Citation Inspector Controls
+      els.prevParaBtn.addEventListener('click', () => stepParagraph(-1));
+      els.nextParaBtn.addEventListener('click', () => stepParagraph(1));
+      els.locateInExplorerBtn.addEventListener('click', () => {
+        if (window.innerWidth < 1024) setMobilePane('explorer');
+        jumpToParagraph(state.activeParaNum, { syncLeft: true, flashCard: true, switchMobileToPdf: false });
+      });
+
+      // Dual-Mode PDF & Zoom Controls
+      els.modeAnnotatedBtn.addEventListener('click', () => setPdfMode('annotated'));
+      els.modeUploadBtn.addEventListener('click', () => setPdfMode('upload'));
+      els.zoomOutBtn.addEventListener('click', () => setZoom(state.zoom - 15));
+      els.zoomInBtn.addEventListener('click', () => setZoom(state.zoom + 15));
+
+      // Local PDF Upload & Drag-Drop
+      els.localPdfSelectBtn.addEventListener('click', () => els.localPdfInput.click());
+      els.localPdfInput.addEventListener('change', (e) => {
+        if (e.target.files && e.target.files[0]) {
+          handleLocalPdfUpload(e.target.files[0]);
+          e.target.value = '';
+        }
+      });
+      ['dragenter', 'dragover'].forEach((evt) => {
+        els.localPdfDropZone.addEventListener(evt, (e) => {
+          e.preventDefault();
+          els.localPdfDropZone.classList.add('border-amber-400', 'bg-slate-800');
+        });
+      });
+      ['dragleave', 'drop'].forEach((evt) => {
+        els.localPdfDropZone.addEventListener(evt, (e) => {
+          e.preventDefault();
+          els.localPdfDropZone.classList.remove('border-amber-400', 'bg-slate-800');
+        });
+      });
+      els.localPdfDropZone.addEventListener('drop', (e) => {
+        const f = e.dataTransfer.files && e.dataTransfer.files[0];
+        if (f) handleLocalPdfUpload(f);
+      });
+
+      // QA Audit Drawer Controls
+      els.openQaAuditBtn.addEventListener('click', openQaDrawer);
+      els.closeQaDrawerBtn.addEventListener('click', closeQaDrawer);
+      els.qaAuditBackdrop.addEventListener('click', (e) => {
+        if (e.target === els.qaAuditBackdrop) closeQaDrawer();
+      });
+      els.rerunQaBtn.addEventListener('click', runQaAudit);
+      els.smokeTestJumpBtn.addEventListener('click', () => {
+        const randomPara = PARAGRAPHS[Math.floor(Math.random() * PARAGRAPHS.length)];
+        closeQaDrawer();
+        jumpToParagraph(randomPara.num, { syncLeft: true, flashCard: true, switchMobileToPdf: false });
+        showToast(`Smoke-Test Jumped to Para. ${randomPara.num} (${randomPara.tag})`, 'success');
+      });
+
+      // Mobile Switcher
+      els.mobileBtnExplorer.addEventListener('click', () => setMobilePane('explorer'));
+      els.mobileBtnPdf.addEventListener('click', () => setMobilePane('pdf'));
+
+      // Desktop Draggable Split Resizer
+      let resizing = false;
+      els.splitResizer.addEventListener('mousedown', () => {
+        resizing = true;
+        els.splitResizer.classList.add('dragging');
+        document.body.style.cursor = 'col-resize';
+        document.body.style.userSelect = 'none';
+      });
+      window.addEventListener('mousemove', (e) => {
+        if (!resizing || window.innerWidth < 1024) return;
+        const pct = (e.clientX / window.innerWidth) * 100;
+        els.leftPane.style.width = `${Math.max(32, Math.min(64, pct))}%`;
+      });
+      window.addEventListener('mouseup', () => {
+        if (!resizing) return;
+        resizing = false;
+        els.splitResizer.classList.remove('dragging');
+        document.body.style.cursor = '';
+        document.body.style.userSelect = '';
+      });
+
+      /* ===================================================================
+       * 12. INITIALIZE & RUN SILENT STARTUP QA CHECK
+       * =================================================================== */
+      renderQuickJumpStrip();
+      renderAnnotatedPdfPages();
+
+      setTimeout(() => {
+        jumpToParagraph(443, { syncLeft: false, switchMobileToPdf: false, smooth: false });
+        runQaAudit();
+      }, 150);
+    })();
+  </script>
+</body>
+</html>
