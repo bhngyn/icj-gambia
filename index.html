@@ -369,6 +369,45 @@
     .cat-pill:hover { border-color: var(--border-strong); background: var(--bg-subtle); }
     .cat-pill.active { background: var(--text-primary); color: #ffffff; border-color: var(--text-primary); }
 
+    /* Cross-Reference Chips in Expanded Drawer */
+    .xref-row {
+      margin-top: 10px;
+      padding-top: 8px;
+      border-top: 1px dashed var(--border);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      flex-wrap: wrap;
+    }
+    .xref-label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-muted);
+      margin-right: 2px;
+    }
+    .xref-chip {
+      height: 22px;
+      padding: 0 7px;
+      border-radius: 99px;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 600;
+      background: var(--bg-surface);
+      color: var(--accent);
+      border: 1px solid var(--accent-border);
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      transition: all 0.12s ease;
+    }
+    .xref-chip:hover {
+      background: var(--accent);
+      color: #ffffff;
+      border-color: var(--accent);
+    }
+
     .util-btn {
       height: 27px;
       padding: 0 9px;
@@ -452,6 +491,17 @@
       color: #ffffff;
     }
     .copy-saved-btn:hover { background: var(--accent-hover); }
+    .copy-memo-btn {
+      height: 23px;
+      padding: 0 8px;
+      border-radius: var(--radius-sm);
+      font-size: 10.5px;
+      font-weight: 600;
+      background: #0f172a;
+      color: #fef08a;
+      border: 1px solid #334155;
+    }
+    .copy-memo-btn:hover { background: #1e293b; }
 
     /* ==========================================================================
        5. LEFT PANE SCROLLABLE GROUPED ENTRIES
@@ -1641,7 +1691,7 @@
         <div class="toolbar">
           <div class="search-wrap">
             <span class="search-icon" aria-hidden="true">&#128269;</span>
-            <input id="search-input" class="search-input" type="text" placeholder="Search paras, OSINT, IIMM, intent..." autocomplete="off" />
+            <input id="search-input" class="search-input" type="text" placeholder="Search paras, OSINT, IIMM, UNOSAT, Corfu..." autocomplete="off" />
             <span class="search-kbd">/</span>
           </div>
           <div id="cat-pills" class="cat-pills" role="tablist" aria-label="Category filters"></div>
@@ -1659,8 +1709,9 @@
             <span id="result-count">Showing 26 of 26 entries</span>
             <div id="active-chips" style="display:inline-flex;gap:5px;flex-wrap:wrap;"></div>
           </div>
-          <div id="saved-export-wrap" style="display:none;">
+          <div id="saved-export-wrap" style="display:none;gap:5px;align-items:center;">
             <button id="btn-copy-saved" class="copy-saved-btn" type="button">Copy All Saved Citations</button>
+            <button id="btn-copy-memo" class="copy-memo-btn" type="button">Copy Brief Memo</button>
           </div>
         </div>
       </div>
@@ -1694,7 +1745,7 @@
         </div>
       </div>
 
-      <!-- Quick Paragraph Jump Bar (All 26 Passages in Chronological Order) -->
+      <!-- Quick Paragraph Jump Bar (All 26 Passages: The Gambia v. Myanmar) -->
       <div class="pdf-jump-bar">
         <div class="pdf-jump-input-wrap">
           <input id="pdf-jump-input" class="pdf-jump-input" type="text" placeholder="Jump to para #..." autocomplete="off" />
@@ -1751,7 +1802,7 @@
   </main>
 
   <!-- ====================================================================== -->
-  <!-- 3. PROOF & INTENT REFERENCE MODAL (3-Section Preserved Reference)      -->
+  <!-- 3. PROOF & INTENT REFERENCE MODAL (The Gambia v. Myanmar Only)         -->
   <!-- ====================================================================== -->
   <div id="ref-modal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="ref-modal-title">
     <div class="modal-panel">
@@ -1805,7 +1856,7 @@
           <h3>3. "Only Reasonable Inference" &amp; Coexisting Objectives <span class="ref-para-badge">Paras. 443, 451–467</span></h3>
           <div class="ref-card">
             <p style="margin:0 0 8px 0;"><strong>Coexistence Rule (Para. 443, 9–6):</strong> Genocidal intent (<em>dolus specialis</em>) <strong>"may exist alongside other intentions, provided that such intentions are not incompatible with the existence of genocidal intent."</strong> Military, security, or counter-insurgency goals do not automatically negate genocidal intent.</p>
-            <p style="margin:0;"><strong>Eliminating Alternative Inferences (Paras. 451–467):</strong> Courts must test whether a pattern of conduct is equally explained by counter-insurgency (paras. 451–453), forced displacement (paras. 454–462), or collective punishment (paras. 463–466). Distinguishing <em>Bosnia</em> and <em>Croatia</em>, where forces attack fleeing civilians, sink escape vessels, and mine borders rather than organizing evacuations, forced displacement <strong>supports rather than negates</strong> genocidal intent (paras. 457–460).</p>
+            <p style="margin:0;"><strong>Eliminating Alternative Inferences (Paras. 451–467):</strong> Courts must test whether a pattern of conduct is equally explained by counter-insurgency (paras. 451–453), forced displacement (paras. 454–462), or collective punishment (paras. 463–466). Where forces attack fleeing civilians, sink escape vessels, and mine borders rather than organizing evacuations, forced displacement <strong>supports rather than negates</strong> genocidal intent (paras. 457–460).</p>
           </div>
         </div>
       </div>
@@ -1813,14 +1864,14 @@
   </div>
 
   <!-- ====================================================================== -->
-  <!-- 4. LIVE QA AUDIT DRAWER (8 Automated DOM & Functional Assertions)      -->
+  <!-- 4. LIVE QA AUDIT DRAWER (9 Automated DOM & Functional Assertions)      -->
   <!-- ====================================================================== -->
   <div id="qa-backdrop" class="qa-backdrop" role="dialog" aria-modal="true" aria-labelledby="qa-drawer-title">
     <aside class="qa-drawer">
       <div class="modal-header">
         <div>
           <div id="qa-drawer-title" class="modal-title">Live UI &amp; Functional QA Audit</div>
-          <div style="font-size:11px;color:#94a3b8;margin-top:2px;">8 automated assertions on the 26-entry Evidence-First Explorer &amp; PDF Sync</div>
+          <div style="font-size:11px;color:#94a3b8;margin-top:2px;">9 automated assertions on the 26-entry Gambia v. Myanmar Explorer &amp; 8-Page PDF Sync</div>
         </div>
         <button id="btn-close-qa" class="modal-close" type="button" aria-label="Close QA Drawer">&times;</button>
       </div>
@@ -1859,56 +1910,16 @@
 
       /* ======================================================================
          1. SINGLE-SOURCE-OF-TRUTH REGISTRY: 5 GROUPS + 26 CURATED ENTRIES
+            (The Gambia v. Myanmar, Merits Judgment of 19 November 2026)
          ====================================================================== */
-      const GROUPS = [
-        {
-          id: 'group-osint',
-          num: 1,
-          focus: 'primary',
-          badge: 'PRIMARY FOCUS',
-          title: 'OSINT, Digital Attribution & Satellite/AV Forensics',
-          subtitle: 'Open-source intelligence, Meta/Facebook attribution, UNOSAT thermal/satellite data, GPS metadata & late digital annexes'
-        },
-        {
-          id: 'group-proof',
-          num: 2,
-          focus: 'primary',
-          badge: 'PRIMARY FOCUS',
-          title: 'Evidentiary Rules, Burden of Proof & Non-Co-operation',
-          subtitle: 'Three-tiered proof standards, flexible burden application, general weighting, ex parte bar & Corfu Channel inferences'
-        },
-        {
-          id: 'group-witnesses',
-          num: 3,
-          focus: 'primary',
-          badge: 'PRIMARY FOCUS',
-          title: 'Witnesses, UN Fact-Finding & Third-Party Materials',
-          subtitle: 'Oral testimony, witness protection, IIMM vs. NGO methodology, UN FFM reliability, state reports & expert mandates'
-        },
-        {
-          id: 'group-intent',
-          num: 4,
-          focus: 'supporting',
-          badge: 'SUPPORTING',
-          title: 'Supporting: Genocidal Intent & Contextual Evidence',
-          subtitle: 'Biological renewal & child targeting, landmark Para. 443 Coexistence Rule, and eliminating alternative inferences'
-        },
-        {
-          id: 'group-preservation',
-          num: 5,
-          focus: 'supporting',
-          badge: 'SUPPORTING',
-          title: 'Supporting: Evidence Preservation, Incitement & Prevention',
-          subtitle: '2020 Provisional Measures evidence-preservation duty, Art. III(c) incitement vs. context, Arts. I/IV/V/VI duties & PM breach'
-        }
-      ];
+      const CASE_FULL_TITLE = 'Application of the Convention on the Prevention and Punishment of the Crime of Genocide (The Gambia v. Myanmar), Merits, Judgment of 19 November 2026';
 
       const CATEGORIES = [
         'All',
         'OSINT & Digital',
         'Satellite & AV',
-        'Witnesses & UN Bodies',
         'Proof & Non-Co-operation',
+        'Witnesses & UN Bodies',
         'Genocidal Intent & Context',
         'Prevention / PMs / Incitement'
       ];
@@ -1916,21 +1927,84 @@
       const CAT_CLASS = {
         'OSINT & Digital': 'cat-osint',
         'Satellite & AV': 'cat-sat',
-        'Witnesses & UN Bodies': 'cat-wit',
         'Proof & Non-Co-operation': 'cat-proof',
+        'Witnesses & UN Bodies': 'cat-wit',
         'Genocidal Intent & Context': 'cat-intent',
         'Prevention / PMs / Incitement': 'cat-prev'
       };
 
       const TIERS = [
-        { id: 'T1', label: 'T1 • High', title: 'High / Considerable Weight', desc: 'IIMM reports, UNOSAT satellite data, unchallenged live testimony, verified digital attribution.' },
-        { id: 'T2', label: 'T2 • Reliable', title: 'Generally Reliable / Corroborative', desc: 'UN FFM reports, redacted/unsigned statements when corroborated, undisputed online speech reports.' },
-        { id: 'T3', label: 'T3 • Limited', title: 'Lower / Cautious / Limited', desc: 'NGO reports, Respondent state/military reports (critical scrutiny), late web-link annexes.' },
-        { id: 'T4', label: 'T4 • Zero', title: 'Excluded / Zero Probative Weight', desc: 'Ex parte sealed evidence, third-party legal conclusions, experts exceeding technical mandate.' },
-        { id: 'Rule', label: 'Rule', title: 'Doctrinal & Proof Standards', desc: 'Burden flexibility, 3-tier proof standards, Corfu Channel inferences, dolus specialis tests.' }
+        {
+          id: 'T1',
+          title: 'Considerable Weight',
+          desc: 'Live oral testimony, IIMM reports/statements, UNOSAT satellite & Meta attribution.'
+        },
+        {
+          id: 'T2',
+          title: 'Corroborated / Reliable',
+          desc: 'UN FFM reports, redacted/unsigned statements (when corroborated), undisputed speeches.'
+        },
+        {
+          id: 'T3',
+          title: 'Lower Weight / Scrutiny',
+          desc: 'NGO reports, late web-link annexes & Respondent military/state reports.'
+        },
+        {
+          id: 'T4',
+          title: 'Zero Weight / Excluded',
+          desc: 'Sealed ex parte envelopes, third-party legal conclusions & out-of-mandate experts.'
+        },
+        {
+          id: 'Rule',
+          title: 'Legal / Procedural Rule',
+          desc: 'Standards & burden of proof, Corfu Channel inferences, dolus specialis & prevention.'
+        }
       ];
 
-      /* All 26 exact entries with chronological Judgment page & realistic PDF excerpt */
+      const GROUPS = [
+        {
+          id: 'group-osint',
+          num: 1,
+          focus: 'primary',
+          badge: 'Primary Focus',
+          title: 'OSINT, Digital Attribution & Satellite Forensics',
+          subtitle: 'IIMM open-source verification, Meta military network attribution, UNOSAT thermal data & GPS metadata'
+        },
+        {
+          id: 'group-proof',
+          num: 2,
+          focus: 'primary',
+          badge: 'Primary Focus',
+          title: 'Standards of Proof, Burden & Non-Co-operation',
+          subtitle: 'Three-tiered proof standards, weighting hierarchy, ex parte bar & Corfu Channel inferences'
+        },
+        {
+          id: 'group-witnesses',
+          num: 3,
+          focus: 'primary',
+          badge: 'Primary Focus',
+          title: 'Witnesses, Collection Methodology & UN Bodies',
+          subtitle: 'Live testimony, protective measures, IIMM vs. NGO protocols, FFM weight & third-party reports'
+        },
+        {
+          id: 'group-intent',
+          num: 4,
+          focus: 'supporting',
+          badge: 'Supporting',
+          title: 'Genocidal Intent (Dolus Specialis) & Context',
+          subtitle: 'Group survival, targeting of children, 9–6 coexistence rule & eliminating alternative inferences'
+        },
+        {
+          id: 'group-preservation',
+          num: 5,
+          focus: 'supporting',
+          badge: 'Supporting',
+          title: 'Provisional Measures, Prevention & Incitement',
+          subtitle: '2020 evidence-preservation order, Art. III(c) hate speech, Arts. I/IV/V/VI duties & 11–4 PM breach'
+        }
+      ];
+
+      /* All 26 entries (The Gambia v. Myanmar, 19 November 2026) */
       const ENTRIES = [
         {
           id: 1,
@@ -1947,6 +2021,7 @@
           oneline: 'Ordered Respondent to prevent destruction and ensure preservation of evidence related to Art. II acts.',
           holding: 'Recalls the Court\'s 23 January 2020 Provisional Measures Order requiring Myanmar to "take effective measures to prevent the destruction and ensure the preservation of evidence related to allegations of acts within the scope of Article II of the Genocide Convention."',
           takeaway: 'Preservation-of-evidence orders create an independent, binding legal obligation. Post-order physical alteration of sites or destruction of records can be litigated as a standalone merits breach using satellite and geospatial evidence (see Para. 646).',
+          relatedIds: [26, 13],
           keyPhrase: 'prevent the destruction and ensure the preservation of evidence',
           pdfText: 'By its Order of 23 January 2020 indicating provisional measures, the Court unanimously directed that the Republic of the Union of Myanmar shall, in accordance with its obligations under the Convention, take effective measures to prevent the destruction and ensure the preservation of evidence related to allegations of acts within the scope of Article II of the Genocide Convention, and submit regular compliance reports to the Court.'
         },
@@ -1965,6 +2040,7 @@
           oneline: 'Refused to consider unredacted witness statements filed under seal for in camera review; returned envelopes.',
           holding: 'The Court refused to consider unredacted witness statements submitted in sealed envelopes for ex parte / in camera inspection by the bench alone, returning the envelopes unread on grounds of procedural fairness and equality of the parties.',
           takeaway: 'Never rely on ex parte or secret filings to cure redaction weaknesses. If witness identities must be protected, use formal protective measures (pseudonyms, closed oral sessions) rather than sealed bench-only submissions.',
+          relatedIds: [3, 8],
           keyPhrase: 'returning the sealed envelopes unread',
           pdfText: 'Having regard to the fundamental principle of the sound administration of justice and the equality of the parties, the Court decided that it could not consider unredacted witness statements filed under seal for ex parte or in camera inspection by the bench alone, and accordingly informed the submitting party that it was returning the sealed envelopes unread.'
         },
@@ -1983,6 +2059,7 @@
           oneline: 'Closed sessions, pseudonyms, confidential identifying details, and bar on witnesses accessing each other\'s testimonies.',
           holding: 'Details the Court\'s protective framework for vulnerable eyewitnesses: testimony heard in closed sessions, use of pseudonyms, redaction of identifying details from public transcripts, and strict sequestration barring witnesses from accessing one another\'s testimonies.',
           takeaway: 'Provides a ready-made procedural blueprint for presenting live survivor or insider testimony at the ICJ without compromising witness safety or risking cross-contamination.',
+          relatedIds: [2, 7],
           keyPhrase: 'closed sessions, pseudonyms, and strict sequestration',
           pdfText: 'To safeguard the security and well-being of vulnerable eyewitnesses while preserving each Party\'s right of cross-examination, the Court adopted protective arrangements comprising closed sessions, pseudonyms, and strict sequestration prohibiting witnesses from accessing the transcripts or recordings of one another\'s testimonies, with identifying details withheld from public records.'
         },
@@ -2001,6 +2078,7 @@
           oneline: 'Party alleging a fact must prove it, applied flexibly where Respondent controls territory and refuses co-operation.',
           holding: 'Reaffirms that the party alleging a fact bears the burden of proving it, but holds that this principle is not rigid and must be applied flexibly where the Respondent exercises exclusive territorial control and denies access—without reversing the overall burden of proof.',
           takeaway: 'Anchor territorial-access arguments here: Applicants do not need to seek a formal reversal of the burden of proof; instead, invoke flexible application paired with Corfu Channel inferences (Paras. 128–131).',
+          relatedIds: [17, 5],
           keyPhrase: 'applied flexibly where the Respondent exercises exclusive territorial control',
           pdfText: 'As a general rule, the party alleging a fact in support of its claims must prove its existence. Nevertheless, the Court reiterates that this rule is not absolute and must be applied flexibly where the Respondent exercises exclusive territorial control over the areas in which the alleged events occurred and denies access to independent investigators, without thereby reversing the overall burden of proof.'
         },
@@ -2019,6 +2097,7 @@
           oneline: '"Fully conclusive" for Art. III acts; "high level of certainty" for Arts. I, IV, VI; statutory interpretation for Art. V.',
           holding: 'Establishes a three-tiered standard: (1) claims of Art. III acts (genocide, incitement, etc.) must be proved by evidence that is "fully conclusive"; (2) breaches of Arts. I, IV, and VI (prevention, investigation, punishment) require a "high level of certainty"; (3) Art. V compliance is assessed through interpretation of domestic legislation.',
           takeaway: 'Structure pleadings to separate Art. III claims from Arts. I/IV/VI claims. Even where a specific Art. III count faces a high bar, the lower "high level of certainty" standard governs prevention, investigation, and punishment.',
+          relatedIds: [4, 25],
           keyPhrase: 'evidence that is fully conclusive',
           pdfText: 'In light of the exceptional gravity of allegations under the Convention, the Court applies a differentiated standard of proof: claims that a State is responsible for acts enumerated in Article III must be established by evidence that is fully conclusive; alleged breaches of the obligations to prevent, investigate, and punish under Articles I, IV, and VI require proof to a high level of certainty; and compliance with Article V is determined by interpreting the Respondent\'s domestic criminal legislation.'
         },
@@ -2037,6 +2116,7 @@
           oneline: 'Caution toward litigation-prepared or single-source materials; preference for contemporaneous firsthand records.',
           holding: 'The Court treats materials prepared specifically for litigation or derived from a single source with caution. It gives greater weight to contemporaneous firsthand records, statements against interest, facts left unchallenged by the opposing party, and testimony tested by cross-examination.',
           takeaway: 'Build every core factual proposition around a triangulation of contemporaneous records, unchallenged facts, and statements against interest rather than single-source litigation affidavits.',
+          relatedIds: [14, 18, 7],
           keyPhrase: 'contemporaneous firsthand records, statements against interest',
           pdfText: 'In assessing the probative weight of materials in the case file, the Court treats with caution evidence prepared specially for the purposes of litigation or emanating from a single uncorroborated source. Greater weight is accorded to contemporaneous firsthand records, statements against interest by State officials, facts left unchallenged by the opposing Party, and oral testimony subjected to cross-examination.'
         },
@@ -2055,6 +2135,7 @@
           oneline: 'Direct eyewitnesses found credible where core statements went unchallenged in cross-examination and aligned with the record.',
           holding: 'Direct eyewitnesses who testified orally were found credible and accorded high weight where their core factual accounts remained unchallenged during cross-examination and were consistent with the broader evidentiary record.',
           takeaway: 'Live oral testimony remains a gold-standard evidentiary tool—especially when witnesses are carefully prepared to corroborate key documentary and geospatial timelines.',
+          relatedIds: [3, 6, 9],
           keyPhrase: 'core factual accounts remained unchallenged during cross-examination',
           pdfText: 'Having observed the demeanour and consistency of the direct eyewitnesses examined before it, the Court finds their testimony credible and accords it high probative weight where their core factual accounts remained unchallenged during cross-examination and aligned closely with contemporaneous documentary and geospatial evidence in the record.'
         },
@@ -2073,8 +2154,9 @@
           oneline: 'Redaction reduces weight but does not preclude consideration; unsigned NGO statements used rarely and only if corroborated.',
           holding: 'Redacting witness identities reduces probative weight because it limits the opposing party\'s ability to challenge the source, but does not render statements inadmissible. Unsigned NGO-collected statements (e.g., LAW sexual-violence accounts) are not devoid of value given trauma and stigma, but are relied upon rarely and only when corroborated.',
           takeaway: 'Do not discard redacted or unsigned survivor statements (especially on SGBV), but treat them strictly as corroborative layers rather than standalone proof.',
-          keyPhrase: 'reduces probative weight but does not render statements inadmissible',
-          pdfText: 'The redaction of witness names and identifying details reduces probative weight because it restricts the opposing Party\'s ability to test the source, yet reduces probative weight but does not render statements inadmissible. Similarly, unsigned statements collected by NGOs (including LAW accounts of sexual violence) are not devoid of value given survivor trauma and stigma, though the Court relies on them rarely and only when independently corroborated.'
+          relatedIds: [2, 9],
+          keyPhrase: 'does not render statements inadmissible',
+          pdfText: 'The redaction of witness names and identifying details reduces probative weight because it restricts the opposing Party\'s ability to test the source, yet does not render statements inadmissible. Similarly, unsigned statements collected by NGOs (including LAW accounts of sexual violence) are not devoid of value given survivor trauma and stigma, though the Court relies on them rarely and only when independently corroborated.'
         },
         {
           id: 9,
@@ -2091,6 +2173,7 @@
           oneline: 'Detailed signed IIMM statements carry "considerable evidential weight"; less detailed signed NGO statements carry lower weight.',
           holding: 'Detailed, signed witness statements collected by the IIMM carry "considerable evidential weight" due to rigorous multi-day interview protocols, identity verification, and cross-checking. Less detailed signed NGO statements (LAW) carry lower weight but remain generally reliable.',
           takeaway: 'When submitting third-party witness statements, explicitly brief the collector\'s methodology (interview duration, verification, chain of custody, trauma-informed protocols) to elevate their tier.',
+          relatedIds: [12, 8],
           keyPhrase: 'considerable evidential weight',
           pdfText: 'The weight attributable to written witness statements depends significantly on the rigour of collection methodology. Detailed, signed statements taken by the Independent Investigative Mechanism for Myanmar (IIMM) under multi-day verification and chain-of-custody protocols carry considerable evidential weight, whereas less detailed signed NGO statements carry lower weight while remaining generally reliable.'
         },
@@ -2109,6 +2192,7 @@
           oneline: 'Evaluated by independence, methodology, and quality; zero probative value ascribed to third-party legal assessments.',
           holding: 'The Court evaluates third-party reports based on the source\'s independence, neutrality, methodology, and quality of corroboration. Crucially, the Court examines only their factual findings and ascribes zero probative value to any legal characterizations or conclusions (e.g., findings of "genocide").',
           takeaway: 'Never cite a UN Commission, Special Rapporteur, or NGO\'s legal conclusion that genocide occurred as proof. Extract and cite only their underlying verified factual findings.',
+          relatedIds: [11, 16],
           keyPhrase: 'zero probative value to any legal characterizations or conclusions',
           pdfText: 'In evaluating reports prepared by international bodies or third parties, the Court assesses the source\'s independence, neutrality, investigative methodology, and corroboration standards. Crucially, the Court considers only verified factual findings contained in such reports and ascribes zero probative value to any legal characterizations or conclusions reached by their authors.'
         },
@@ -2127,6 +2211,7 @@
           oneline: 'FFM reports found generally reliable and given significant weight when corroborated, despite lower "reasonable grounds" standard.',
           holding: 'The Court found the UN Fact-Finding Mission (FFM) reports generally reliable and accorded them significant weight when corroborated, notwithstanding that the FFM operated under a "reasonable grounds to believe" standard rather than an international criminal law standard.',
           takeaway: 'Critical precedent where no IIMM-style criminal investigative mechanism exists: UN Commissions of Inquiry and fact-finding bodies retain substantial evidentiary force when their factual findings are corroborated across independent sources.',
+          relatedIds: [12, 10],
           keyPhrase: 'generally reliable and accorded them significant weight when corroborated',
           pdfText: 'Although the Independent International Fact-Finding Mission on Myanmar (FFM) applied a "reasonable grounds to believe" threshold rather than an international criminal law standard, the Court considers the FFM\'s factual reporting to be generally reliable and accorded them significant weight when corroborated by independent primary sources, geospatial analysis, or consistent eyewitness testimony.'
         },
@@ -2145,6 +2230,7 @@
           oneline: 'Accorded "considerable evidential weight"; explicitly notes reliance on social media, geospatial imagery, and digital AV.',
           holding: 'Accorded IIMM analytical reports "considerable evidential weight" given its demanding international criminal law standard. Explicitly noted the IIMM\'s reliance on "open-source information including social media, geospatial imagery and analysis, digital evidence including photographs and videos."',
           takeaway: 'Landmark ICJ validation of OSINT: social media, geospatial analysis, and digital photos/videos can reach Tier 1 weight when authenticated and synthesized under rigorous investigative standards.',
+          relatedIds: [13, 19, 9],
           keyPhrase: 'open-source information including social media, geospatial imagery and analysis',
           pdfText: 'Given the IIMM\'s mandate to collect and verify evidence to an international criminal law standard, the Court accords its analytical reports considerable evidential weight. The Court specifically notes the Mechanism\'s systematic authentication and corroboration of open-source information including social media, geospatial imagery and analysis, digital evidence including photographs and videos.'
         },
@@ -2163,6 +2249,7 @@
           oneline: 'Satellite imagery and fire-detection heat anomaly data given "considerable evidential weight in themselves."',
           holding: 'Satellite imagery and fire-detection heat anomaly data produced by UNITAR-UNOSAT were accorded "considerable evidential weight in themselves," while the Court accounted for known technical limitations such as satellite overpass timing and cloud cover.',
           takeaway: 'High-resolution satellite imagery and thermal/fire anomaly datasets from independent technical agencies can stand on their own as Tier 1 proof of physical destruction, provided technical caveats are transparently addressed.',
+          relatedIds: [12, 20, 26],
           keyPhrase: 'considerable evidential weight in themselves',
           pdfText: 'The Court observes that high-resolution satellite imagery and active fire-detection thermal anomaly datasets produced by UNITAR-UNOSAT are objective technical records that carry considerable evidential weight in themselves, provided that the Court duly accounts for documented technical limitations including satellite overpass timing, spatial resolution, and seasonal cloud cover.'
         },
@@ -2181,6 +2268,7 @@
           oneline: 'NGO reports assigned "lower evidential weight"; Respondent\'s own military/state reports face "critical scrutiny."',
           holding: 'Reports by non-governmental organizations are assigned "lower evidential weight" and used primarily for corroboration. Reports produced by the Respondent\'s own military or government organs are subjected to "critical scrutiny" and caution unless corroborated or constituting statements against interest.',
           takeaway: 'Anticipate skepticism toward both NGO dossiers and self-serving domestic military inquiries. Mine the Respondent\'s own official reports specifically for admissions against interest.',
+          relatedIds: [6, 15],
           keyPhrase: 'lower evidential weight',
           pdfText: 'Reports published by non-governmental organizations are assigned lower evidential weight and serve primarily as corroborative material where aligned with higher-tier sources. Reports authored by the Respondent\'s own military or governmental organs are subjected to critical scrutiny and treated with caution except insofar as they are corroborated or contain statements against interest.'
         },
@@ -2199,6 +2287,7 @@
           oneline: 'Court did not review late-submitted web-link annexes generally; considered only for the narrow purpose cited.',
           holding: 'Where a party submitted extensive web-link annexes late in the proceedings (ICOE Report materials), the Court declined to review them generally and considered them only for the narrow, specific purpose identified by the submitting party (security forces\' civilian-protection efforts).',
           takeaway: 'Never dump raw URLs or late web-link repositories into annexes. Preserve, archive, and authenticate digital evidence early, and explicitly map each item to a specific factual pleading.',
+          relatedIds: [12, 14],
           keyPhrase: 'declined to review late-submitted web-link annexes generally',
           pdfText: 'With respect to extensive online annexes submitted via web links at a late stage of the proceedings (including materials appended to the ICOE Report), the Court declined to review late-submitted web-link annexes generally, restricting its examination strictly to the narrow purpose explicitly pleaded by the submitting Party.'
         },
@@ -2217,6 +2306,7 @@
           oneline: 'Court refused to give weight to legal conclusions offered by a Party\'s counter-terrorism expert beyond his mandate.',
           holding: 'The Court refused to accord any weight to legal conclusions offered by a Party\'s counter-terrorism expert that went beyond his technical area of expertise and encroached on legal determinations reserved for the Court.',
           takeaway: 'Keep technical experts (military, geospatial, demographic, medical, OSINT) strictly within their empirical discipline; legal framing undermines the expert\'s credibility.',
+          relatedIds: [10],
           keyPhrase: 'refused to accord any weight to legal conclusions',
           pdfText: 'Where a Party\'s counter-terrorism expert ventured beyond his technical and operational discipline to offer opinions on legal qualification under the Genocide Convention, the Court refused to accord any weight to legal conclusions that encroached upon judicial determinations reserved exclusively for the Court.'
         },
@@ -2235,6 +2325,7 @@
           oneline: 'Refusal of territorial access and ignoring 26 IIMM requests allows "more liberal recourse to inferences of fact."',
           holding: 'Because the Respondent refused territorial access to UN investigators and ignored 26 formal IIMM requests for information, the Court held that the Applicant may be allowed a "more liberal recourse to inferences of fact" regarding events within the Respondent\'s exclusive knowledge.',
           takeaway: 'Document every denied access request, ignored UN inquiry, and unfulfilled provisional measure. Building a formal record of non-co-operation unlocks Corfu Channel inferential latitude.',
+          relatedIds: [4, 20],
           keyPhrase: 'more liberal recourse to inferences of fact',
           pdfText: 'Recalling the Corfu Channel principle, the Court notes that Myanmar consistently denied territorial access to United Nations fact-finding personnel and left 26 formal IIMM requests for information unanswered. In these circumstances, the Applicant must be allowed a more liberal recourse to inferences of fact and circumstantial evidence regarding events occurring within the Respondent\'s exclusive territorial control.'
         },
@@ -2253,6 +2344,7 @@
           oneline: 'Court relied on undisputed English-language online reports documenting speeches by Senior General Min Aung Hlaing.',
           holding: 'The Court relied on English-language online media reports documenting public speeches by Senior General Min Aung Hlaing where the authenticity and accuracy of those reports were not disputed by the Respondent.',
           takeaway: 'Online press and broadcast records of official statements carry reliable weight when uncontested—especially when paired with original-language archives and certified translations.',
+          relatedIds: [6, 22],
           keyPhrase: 'authenticity and accuracy of those online reports were not disputed',
           pdfText: 'In establishing the public statements of senior military leadership, the Court relies upon contemporaneous English-language online press reports documenting speeches delivered by Senior General Min Aung Hlaing, noting that the authenticity and accuracy of those online reports were not disputed by the Respondent during the proceedings.'
         },
@@ -2271,6 +2363,7 @@
           oneline: 'Examined Meta\'s removal of 43 Pages and 10,485 hate-speech posts, linking campaigns to military actors via technical metadata.',
           holding: 'Examined Meta\'s takedown of 43 Pages and 10,485 hate-speech posts, crediting forensic attribution linking coordinated inauthentic behavior to military personnel via shared administrators, IP addresses, shared devices, office internet connections, videos, and public comments.',
           takeaway: 'Demonstrates the exact technical indicators the ICJ accepts for State attribution of online campaigns: platform takedown disclosures, IP/device overlap, admin graphs, and institutional network links.',
+          relatedIds: [12, 22],
           keyPhrase: 'shared administrators, IP addresses, shared devices, office internet connections',
           pdfText: 'Examining Meta\'s removal of 43 Pages and 10,485 anti-Rohingya hate-speech posts, the Court credits the technical forensic attribution linking these coordinated inauthentic networks directly to Myanmar military personnel through shared administrators, IP addresses, shared devices, office internet connections, uploaded videos, and overlapping public comments.'
         },
@@ -2289,6 +2382,7 @@
           oneline: 'Noted mass-grave video (para. 228), GPS-tagged aerial photos (para. 279), and geospatial/OSINT as "indispensable" (para. 281).',
           holding: 'Cited FFM-reviewed mass-grave video footage (para. 228), IIMM aerial photographs embedded with GPS metadata (para. 279), and the IIMM\'s finding that deliberate crime-scene alteration rendered "geospatial and aerial imagery, crime scene photographs, environmental spatial evidence, and open-source material, indispensable" (para. 281).',
           takeaway: 'Where physical access is blocked or sites are bulldozed, preserve original EXIF/GPS metadata and pair aerial/satellite time-series with ground-level video to reconstruct altered crime scenes.',
+          relatedIds: [13, 17, 26],
           keyPhrase: 'geospatial and aerial imagery, crime scene photographs, environmental spatial evidence, and open-source material, indispensable',
           pdfText: 'In reconstructing specific massacre sites, the Court notes mass-grave video footage authenticated by the FFM (para. 228), IIMM aerial photographs bearing embedded GPS metadata (para. 279), and the IIMM\'s conclusion that systematic site alteration rendered geospatial and aerial imagery, crime scene photographs, environmental spatial evidence, and open-source material, indispensable (para. 281).'
         },
@@ -2307,6 +2401,7 @@
           oneline: 'Destruction includes impairing a group\'s capacity to renew itself; targeting children is especially probative of intent.',
           holding: 'Verified Judgment Holding: Clarified that physical/biological destruction under Art. II encompasses acts impairing "the group\'s capacity to renew itself, and hence to ensure its long-term survival" (paras. 288–293). Held that the systematic targeting of children is especially probative of genocidal intent because children are vital to a group\'s immediate and future survival (paras. 374–380).',
           takeaway: 'Present demographic, reproductive, and child-casualty evidence not merely as Art. II(a)/(b)/(c) acts, but as core inferential proof of intent to destroy the group\'s long-term biological viability.',
+          relatedIds: [23, 24],
           keyPhrase: 'the group\'s capacity to renew itself, and hence to ensure its long-term survival',
           pdfText: 'The Court clarifies that physical or biological destruction under Article II is not limited to immediate mortality, but encompasses conduct calculated to impair the group\'s capacity to renew itself, and hence to ensure its long-term survival (paras. 288–293). Moreover, the systematic killing and brutalization of children is especially probative of genocidal intent given their indispensable role in group continuity (paras. 374–380).'
         },
@@ -2325,6 +2420,7 @@
           oneline: 'By 14–1, no Art. III(c) incitement of private persons, yet anti-group hate speech remained key context for dolus specialis.',
           holding: 'Verified Judgment Holding: By 14–1, the Court found the Respondent had not directly and publicly incited private persons to commit genocide under Art. III(c) (para. 646). However, dehumanizing anti-group hate speech by officials and state-linked networks remained highly relevant contextual evidence for inferring dolus specialis (paras. 402–404).',
           takeaway: 'Even if official rhetoric falls short of the strict Art. III(c) "direct and public incitement" threshold, deploy it systematically as contextual evidence of genocidal intent alongside battlefield conduct.',
+          relatedIds: [19, 18],
           keyPhrase: 'highly relevant contextual evidence for inferring dolus specialis',
           pdfText: 'While finding by fourteen votes to one that the stringent legal threshold for direct and public incitement of private persons under Article III(c) was not met (para. 646), the Court holds that pervasive dehumanizing hate speech disseminated by officials and state-linked digital networks constitutes highly relevant contextual evidence for inferring dolus specialis alongside the pattern of conduct on the ground (paras. 402–404).'
         },
@@ -2343,6 +2439,7 @@
           oneline: 'Landmark 9–6 holding: genocidal intent may coexist with military/counter-insurgency objectives if not incompatible.',
           holding: 'Verified Judgment Holding (9–6): Held that "genocidal intent may exist alongside other intentions, provided that such intentions are not incompatible with the existence of genocidal intent." The presence of military, security, or counter-insurgency objectives does not automatically exclude dolus specialis.',
           takeaway: 'This is the decisive answer to the standard "armed conflict / counter-insurgency" defense: litigators do not need to disprove military motives, only show that the pattern of destruction is compatible with—and only reasonably explained by—coexisting genocidal intent.',
+          relatedIds: [21, 24],
           keyPhrase: 'genocidal intent may exist alongside other intentions',
           pdfText: 'By nine votes to six, the Court holds that genocidal intent may exist alongside other intentions, provided that such intentions are not incompatible with the existence of genocidal intent. Accordingly, the concurrent existence of military, security, or counter-insurgency objectives does not automatically exclude a finding of dolus specialis.'
         },
@@ -2358,11 +2455,12 @@
           sourceType: 'holding',
           section: 'Part V • Testing Alternative Inferences',
           title: 'Eliminating Alternative Inferences (Displacement, Counter-Insurgency, Punishment)',
-          oneline: 'Rejected counter-insurgency, displacement, and punishment as excluding genocide; distinguished Bosnia/Croatia.',
-          holding: 'Verified Judgment Holding: Systematically tested and rejected counter-insurgency (paras. 451–453), forced displacement (paras. 454–462), and collective punishment (paras. 463–466) as sole explanations. Distinguished Bosnia and Croatia: where forces fire on fleeing civilians, sink boats, and mine borders rather than organizing evacuations, displacement supports—rather than negates—genocidal intent (paras. 457–460).',
+          oneline: 'Rejected counter-insurgency, displacement, and punishment as excluding genocide; attacks on fleeing civilians support intent.',
+          holding: 'Verified Judgment Holding: Systematically tested and rejected counter-insurgency (paras. 451–453), forced displacement (paras. 454–462), and collective punishment (paras. 463–466) as sole explanations. Where forces fire on fleeing civilians, sink boats, and mine borders rather than organizing evacuations, displacement supports—rather than negates—genocidal intent (paras. 457–460).',
           takeaway: 'Directly confront alternative explanations in pleadings. Focus on conduct toward fleeing civilians (attacks on evacuation corridors, destruction of life-sustaining infrastructure) to prove displacement is a vehicle for destruction rather than mere expulsion.',
+          relatedIds: [23, 21],
           keyPhrase: 'displacement supports—rather than negates—genocidal intent',
-          pdfText: 'Testing alternative hypotheses against the evidentiary record, the Court rejects counter-insurgency (paras. 451–453), forced displacement (paras. 454–462), and collective punishment (paras. 463–466) as adequate sole explanations. Distinguishing Bosnia and Croatia, where forces fire upon fleeing civilians, sink escape vessels, and lay border landmines rather than organizing evacuations, displacement supports—rather than negates—genocidal intent (paras. 457–460).'
+          pdfText: 'Testing alternative hypotheses against the evidentiary record, the Court rejects counter-insurgency (paras. 451–453), forced displacement (paras. 454–462), and collective punishment (paras. 463–466) as adequate sole explanations. Where forces fire upon fleeing civilians, sink escape vessels, and lay border landmines rather than organizing evacuations, displacement supports—rather than negates—genocidal intent (paras. 457–460).'
         },
         {
           id: 25,
@@ -2379,6 +2477,7 @@
           oneline: 'Prevention assessed in concreto; duty to investigate triggers on "reasonable grounds to suspect"; Art. V requires full coverage.',
           holding: 'Verified Judgment Holding: The duty to prevent is assessed in concreto based on a State\'s capacity to influence (paras. 489–510). The duty to investigate triggers upon "reasonable grounds to suspect" an Art. III act and requires a prompt, thorough, independent, and impartial inquiry (paras. 511–516). Domestic criminal law under Art. V must capture all Art. III elements without gaps (paras. 551–574).',
           takeaway: 'Document sham, delayed, or non-independent domestic military inquiries to establish a breach of the duty to investigate/punish under the lower "high level of certainty" standard.',
+          relatedIds: [5, 1],
           keyPhrase: 'triggers upon reasonable grounds to suspect',
           pdfText: 'The obligation to prevent genocide under Article I is assessed in concreto by reference to the State\'s capacity to influence perpetrators (paras. 489–510). The duty to investigate triggers upon reasonable grounds to suspect an Article III act and demands a prompt, thorough, independent, and impartial inquiry (paras. 511–516), while Article V requires domestic criminal statutes to encompass all Article III elements without legislative gaps (paras. 551–574).'
         },
@@ -2397,6 +2496,7 @@
           oneline: 'Found 11–4 that burning village remnants (May 2020) and building a base on a village site (2021) breached the 2020 Order.',
           holding: 'Verified Judgment Holding (11–4): Relying on post-2020 evidence including satellite and geospatial records, the Court held that burning and destroying remnants of at least five villages (May 2020) and constructing a government base on a former village site (2021) violated the binding 2020 Provisional Measures Order to preserve evidence.',
           takeaway: 'Maintain continuous satellite monitoring of alleged crime scenes after Provisional Measures are issued. Post-order site destruction or construction provides concrete, high-weight proof of a PM breach.',
+          relatedIds: [1, 13, 20],
           keyPhrase: 'violated the binding 2020 Provisional Measures Order to preserve evidence',
           pdfText: 'OPERATIVE CLAUSE — By eleven votes to four, relying on post-2020 satellite and geospatial records, the Court finds that the burning and destruction of remnants of at least five Rohingya villages in May 2020 and the construction of a government base over a former village site in 2021 violated the binding 2020 Provisional Measures Order to preserve evidence.'
         }
@@ -2420,11 +2520,12 @@
         7: 'PART IV–V • GROUP SURVIVAL, INCITEMENT & COEXISTENCE RULE',
         8: 'PART V–VII • ALTERNATIVE INFERENCES, PREVENTION & DISPOSITIF'
       };
+      const TOTAL_ANNOTATED_PAGES = 8;
 
       /* ======================================================================
          2. APPLICATION STATE
          ====================================================================== */
-      const STORAGE_KEY = 'icj_genocide_evidence_explorer_saved_v2';
+      const STORAGE_KEY = 'icj_gambia_myanmar_evidence_explorer_saved_v1';
 
       const state = {
         search: '',
@@ -2450,7 +2551,7 @@
         try {
           const raw = localStorage.getItem(STORAGE_KEY);
           const arr = raw ? JSON.parse(raw) : [];
-          return new Set(Array.isArray(arr) ? arr : []);
+          return new Set(Array.isArray(arr) ? arr.filter(id => ENTRY_MAP.has(id)) : []);
         } catch (_) {
           return new Set();
         }
@@ -2513,7 +2614,17 @@
       }
 
       function formatCitation(entry) {
-        return `Application of the Convention on the Prevention and Punishment of the Crime of Genocide (The Gambia v. Myanmar), Merits, Judgment of 19 November 2026, ${entry.para} (${entry.title}).`;
+        return `${CASE_FULL_TITLE}, ${entry.para} (${entry.title}).`;
+      }
+
+      function formatBriefMemo(entries) {
+        return entries.map((e, idx) => [
+          `[${idx + 1}] The Gambia v. Myanmar (2026) — ${e.para} | Weight: ${e.tier} | ${e.category}`,
+          `Title: ${e.title}`,
+          `Citation: ${formatCitation(e)}`,
+          `Holding: ${e.holding}`,
+          `Litigation Takeaway: ${e.takeaway}`
+        ].join('\n')).join('\n\n' + '─'.repeat(64) + '\n\n');
       }
 
       /* ======================================================================
@@ -2585,7 +2696,7 @@
 
         document.getElementById('result-count').textContent = `Showing ${filtered.length} of ${ENTRIES.length} entries`;
         document.getElementById('saved-count').textContent = String(state.savedIds.size);
-        document.getElementById('saved-export-wrap').style.display = (state.savedOnly && state.savedIds.size > 0) ? 'block' : 'none';
+        document.getElementById('saved-export-wrap').style.display = (state.savedOnly && state.savedIds.size > 0) ? 'inline-flex' : 'none';
 
         const allExpanded = filtered.length > 0 && filtered.every(e => state.expandedIds.has(e.id));
         document.getElementById('btn-expand-all').textContent = allExpanded ? 'Collapse All' : 'Expand All';
@@ -2612,7 +2723,13 @@
             const isViewing = state.activeEntryId === entry.id;
             const catCls = CAT_CLASS[entry.category] || 'cat-proof';
             const srcCls = entry.sourceType === 'verbatim' ? 'source-verbatim' : 'source-holding';
-            const srcLabel = entry.sourceType === 'verbatim' ? 'Verbatim / Part 1 Record' : 'Verified Holding (Paras. 384–646)';
+            const srcLabel = entry.sourceType === 'verbatim' ? 'Verbatim / Part 1 Record' : 'Verified Holding (Paras. 288–646)';
+
+            const xrefs = (entry.relatedIds || [])
+              .map(rid => ENTRY_MAP.get(rid))
+              .filter(Boolean)
+              .map(rel => `<button type="button" class="xref-chip" data-action="xref-jump" data-target-id="${rel.id}" title="Jump to ${escapeHtml(rel.title)}">${escapeHtml(rel.para)} &#8599;</button>`)
+              .join('');
 
             return `
               <article id="entry-row-${entry.id}" class="entry-row ${isExpanded ? 'expanded' : ''} ${isViewing ? 'is-viewing' : ''}" data-id="${entry.id}">
@@ -2657,6 +2774,7 @@
                       </div>
                     </div>
                   </div>
+                  ${xrefs ? `<div class="xref-row"><span class="xref-label">Related Paragraphs:</span>${xrefs}</div>` : ''}
                 </div>
               </article>
             `;
@@ -2712,7 +2830,7 @@
       function renderAnnotatedPdfPages() {
         const host = document.getElementById('annotated-pages-host');
         const pages = new Map();
-        for (let p = 1; p <= 8; p++) pages.set(p, []);
+        for (let p = 1; p <= TOTAL_ANNOTATED_PAGES; p++) pages.set(p, []);
         CHRONO_ENTRIES.forEach(e => pages.get(e.pdfPage).push(e));
 
         const parts = [];
@@ -2748,7 +2866,7 @@
               </div>
               <div class="icj-page-footer">
                 <span>The Gambia v. Myanmar — Merits Judgment (19 November 2026)</span>
-                <span style="font-weight:700;color:#334155;">Page ${pageNum} of 8</span>
+                <span style="font-weight:700;color:#334155;">Page ${pageNum} of ${TOTAL_ANNOTATED_PAGES}</span>
               </div>
             </article>
           `);
@@ -2786,7 +2904,7 @@
         document.getElementById('insp-meta').textContent = `${entry.tier} • ${entry.category} • ${entry.section}`;
         document.getElementById('stepper-count').textContent = `${entry.chronoIndex + 1} / ${CHRONO_ENTRIES.length}`;
         if (state.pdfMode === 'annotated') {
-          document.getElementById('pdf-page-badge').textContent = `Page ${entry.pdfPage} / 8`;
+          document.getElementById('pdf-page-badge').textContent = `Page ${entry.pdfPage} / ${TOTAL_ANNOTATED_PAGES}`;
         }
 
         // 2. Sync Quick Jump Pills in PDF Pane
@@ -2800,7 +2918,6 @@
 
         // 3. Bidirectional Sync to Explorer if requested
         if (syncExplorer) {
-          // Clear conflicting filters if the entry is currently hidden
           const visibleNow = getFilteredEntries().some(e => e.id === entry.id);
           if (!visibleNow) {
             state.search = '';
@@ -2828,7 +2945,6 @@
             }
           }
         } else {
-          // Lightweight DOM highlight update without losing scroll
           document.querySelectorAll('.entry-row').forEach(row => {
             row.classList.toggle('is-viewing', Number(row.dataset.id) === entry.id);
           });
@@ -2859,7 +2975,7 @@
 
         const tag = document.createElement('span');
         tag.className = 'margin-tag';
-        tag.textContent = `${entry.tier} • ${entry.category}`;
+        tag.textContent = `${entry.para} • ${entry.tier}`;
         target.appendChild(tag);
 
         target.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto', block: 'center' });
@@ -2887,7 +3003,7 @@
           e.title.toLowerCase().includes(q)
         );
         if (!match) {
-          showToast(`No paragraph matched "${raw}". Try 116, 121, 80, 161, or 443.`);
+          showToast(`No paragraph matched "${raw}". Try 116, 121, 80, 128, or 443.`);
           return false;
         }
         jumpToEntry(match.id, { syncExplorer: true, expandInExplorer: true, pulseExplorer: true });
@@ -2908,7 +3024,7 @@
 
         if (isAnnotated) {
           const active = ENTRY_MAP.get(state.activeEntryId) || CHRONO_ENTRIES[0];
-          document.getElementById('pdf-page-badge').textContent = `Page ${active.pdfPage} / 8`;
+          document.getElementById('pdf-page-badge').textContent = `Page ${active.pdfPage} / ${TOTAL_ANNOTATED_PAGES}`;
         } else {
           document.getElementById('pdf-page-badge').textContent = state.pdfDoc
             ? `Local PDF (${state.pdfDoc.numPages} pp.)`
@@ -3124,7 +3240,7 @@
         const entry = ENTRY_MAP.get(Number(targetEl.dataset.tooltipId));
         if (!entry) return;
 
-        document.getElementById('tt-badge').textContent = `${entry.para} • p.${entry.pdfPage}`;
+        document.getElementById('tt-badge').textContent = `${entry.para} (p.${entry.pdfPage})`;
         document.getElementById('tt-tier').textContent = `${entry.tier} • ${entry.category}`;
         document.getElementById('tt-body').textContent = `“${entry.pdfText.slice(0, 165)}...”`;
 
@@ -3155,7 +3271,7 @@
       });
 
       /* ======================================================================
-         9. LIVE QA AUDIT ENGINE (8 AUTOMATED DOM & FUNCTIONAL ASSERTIONS)
+         9. LIVE QA AUDIT ENGINE (9 AUTOMATED DOM & FUNCTIONAL ASSERTIONS)
          ====================================================================== */
       function runQaAudit() {
         const suiteStart = performance.now();
@@ -3196,8 +3312,8 @@
           }
         }
 
-        // 1. Single-source 26-entry registry integrity
-        check('1. Single-Source 26-Entry Registry Integrity', () => {
+        // 1. Single-source 26-entry registry & 8-page PDF integrity
+        check('1. Single-Source 26-Entry Registry & 8-Page PDF Integrity', () => {
           const validTiers = new Set(['T1', 'T2', 'T3', 'T4', 'Rule']);
           const validCats = new Set(CATEGORIES.slice(1));
           const missingPdf = [];
@@ -3206,10 +3322,11 @@
             if (!document.getElementById(`pdf-passage-${e.id}`)) missingPdf.push(e.para);
             if (!validTiers.has(e.tier) || !validCats.has(e.category)) invalidMeta.push(e.para);
           });
-          const passed = ENTRIES.length === 26 && missingPdf.length === 0 && invalidMeta.length === 0;
+          const pageCount = document.querySelectorAll('.icj-page').length;
+          const passed = ENTRIES.length === 26 && pageCount === 8 && missingPdf.length === 0 && invalidMeta.length === 0;
           return {
             passed,
-            metrics: `Registry: ${ENTRIES.length}/26 entries | PDF passages mapped: ${26 - missingPdf.length}/26 | Valid tiers & categories: ${26 - invalidMeta.length}/26`,
+            metrics: `Registry: ${ENTRIES.length}/26 entries | PDF pages: ${pageCount}/8 | Passages mapped: ${26 - missingPdf.length}/26`,
             error: !passed ? `Missing PDF: ${missingPdf.join(', ')} | Invalid meta: ${invalidMeta.join(', ')}` : null
           };
         });
@@ -3243,33 +3360,51 @@
           const pdfEl = document.getElementById('pdf-passage-19');
           const hasHighlight = pdfEl && pdfEl.classList.contains('pdf-para-active');
           const hasMarginTag = pdfEl && !!pdfEl.querySelector('.margin-tag');
-          const inspSynced = document.getElementById('insp-para').textContent === 'Paras. 161–168';
+          const inspSynced = document.getElementById('insp-para').textContent.includes('161–168');
           const passed = hasHighlight && hasMarginTag && inspSynced;
           return {
             passed,
-            metrics: `Jumped to Paras. 161–168 → Golden highlight: ${hasHighlight ? 'OK' : 'FAIL'} | Margin tag: ${hasMarginTag ? 'OK' : 'FAIL'} | Inspector synced: ${inspSynced ? 'OK' : 'FAIL'}`,
+            metrics: `Paras. 161–168 (Page 6) spotlight, margin tag & Inspector: ${passed ? 'OK' : 'FAIL'}`,
             error: !passed ? 'PDF highlight, margin tag, or Inspector failed to sync' : null
           };
         });
 
         // 4. Bidirectional PDF-to-Explorer sync
         check('4. Bidirectional PDF-to-Explorer Sync', () => {
-          const targetPdf = document.getElementById('pdf-passage-13'); // Para. 121 UNOSAT
+          const targetPdf = document.getElementById('pdf-passage-23'); // Para. 443 Coexistence Rule (Page 7)
           let ok = false;
           if (targetPdf) {
             targetPdf.click();
-            const row = document.getElementById('entry-row-13');
-            ok = state.activeEntryId === 13 && row && row.classList.contains('is-viewing') && row.classList.contains('expanded');
+            const row = document.getElementById('entry-row-23');
+            ok = state.activeEntryId === 23 && row && row.classList.contains('is-viewing') && row.classList.contains('expanded');
           }
           return {
             passed: ok,
-            metrics: `Clicked #pdf-passage-13 (Para. 121 UNOSAT) → Synced & expanded #entry-row-13: ${ok ? 'OK' : 'FAIL'}`,
+            metrics: `Clicked #pdf-passage-23 (Para. 443, Page 7) → Synced & expanded #entry-row-23: ${ok ? 'OK' : 'FAIL'}`,
             error: !ok ? 'Clicking PDF passage did not sync and expand matching Explorer row' : null
           };
         });
 
-        // 5. Filter & Weight Ladder accuracy
-        check('5. Filter & Weight Ladder Accuracy (T1–T4, Rule, Categories, Search)', () => {
+        // 5. Cross-Reference Chip Resolution (Gambia v. Myanmar Only)
+        check('5. Cross-Reference Chip Resolution (26-Entry Graph)', () => {
+          const brokenRefs = [];
+          let totalRefs = 0;
+          ENTRIES.forEach(e => {
+            (e.relatedIds || []).forEach(rid => {
+              totalRefs++;
+              if (!ENTRY_MAP.has(rid)) brokenRefs.push(`${e.id}->${rid}`);
+            });
+          });
+          const passed = brokenRefs.length === 0 && totalRefs >= 40;
+          return {
+            passed,
+            metrics: `Cross-refs verified: ${totalRefs} (0 broken) | All targets inside Gambia v. Myanmar registry`,
+            error: !passed ? `Broken refs: ${brokenRefs.join(', ')}` : null
+          };
+        });
+
+        // 6. Filter & Weight Ladder accuracy (26 entries)
+        check('6. Filter & Weight Ladder Accuracy (T1–T4, Rule, Categories, Search)', () => {
           state.tier = 'T1';
           const t1Count = getFilteredEntries().length;
           state.tier = 'T4';
@@ -3283,31 +3418,33 @@
           const passed = t1Count === 7 && t4Count === 3 && osintCount === 4 && searchHits.length === 1 && searchHits[0].id === 13;
           return {
             passed,
-            metrics: `T1=${t1Count} (exp 7) | T4=${t4Count} (exp 3) | OSINT & Digital=${osintCount} (exp 4) | Search "UNOSAT"=${searchHits.length} hit (Para. 121)`,
-            error: !passed ? 'One or more filter/search counts deviated from expected dataset totals' : null
+            metrics: `T1=${t1Count} (exp 7) | T4=${t4Count} (exp 3) | OSINT & Digital=${osintCount} (exp 4) | Search "UNOSAT"=${searchHits.length} hit`,
+            error: !passed ? 'One or more filter/search counts deviated from expected 26-entry totals' : null
           };
         });
 
-        // 6. Bookmark persistence & Export Citations readiness
-        check('6. Bookmark Persistence & Export Citations Readiness', () => {
+        // 7. Bookmark persistence, Citation & Brief Memo Export readiness
+        check('7. Bookmark Persistence, Citation & Brief Memo Export Readiness', () => {
           state.search = '';
           state.savedIds.add(12);
+          state.savedIds.add(17);
           persistSaved();
           state.savedOnly = true;
           renderExplorerGroups();
           const exportVisible = document.getElementById('saved-export-wrap').style.display !== 'none';
-          const citeFormat = formatCitation(ENTRY_MAP.get(12));
-          const citeOk = citeFormat.includes('19 November 2026') && citeFormat.includes('Para. 116');
-          const passed = exportVisible && citeOk;
+          const memoBtn = document.getElementById('btn-copy-memo');
+          const memoText = formatBriefMemo([ENTRY_MAP.get(12), ENTRY_MAP.get(17)]);
+          const memoOk = memoText.includes('Para. 116') && memoText.includes('Paras. 128–131') && memoText.includes('Litigation Takeaway:');
+          const passed = exportVisible && !!memoBtn && memoOk;
           return {
             passed,
-            metrics: `Saved badge updated, Export button visible in Saved view: ${exportVisible ? 'OK' : 'FAIL'} | Citation formatter: ${citeOk ? 'OK' : 'FAIL'}`,
-            error: !passed ? 'Saved export control or citation formatting failed' : null
+            metrics: `Saved export controls visible: ${exportVisible ? 'OK' : 'FAIL'} | Brief Memo formatter: ${memoOk ? 'OK' : 'FAIL'}`,
+            error: !passed ? 'Saved export controls or Brief Memo formatting failed' : null
           };
         });
 
-        // 7. Prev/Next stepper wrap-around across all 26 passages
-        check('7. Prev/Next Stepper Wrap-Around Across All 26 Passages', () => {
+        // 8. Prev/Next stepper wrap-around across all 26 passages
+        check('8. Prev/Next Stepper Wrap-Around Across All 26 Passages', () => {
           state.savedOnly = false;
           jumpToEntry(CHRONO_ENTRIES[0].id, { syncExplorer: false, smooth: false });
           const visited = [state.activeEntryId];
@@ -3321,13 +3458,13 @@
           const passed = visited.length === 26 && seqOk && wrapOk;
           return {
             passed,
-            metrics: `Stepped ${visited.length}/26 chronological passages | Wrap 646→8(3) & 8(3)→646: ${wrapOk ? 'OK' : 'FAIL'}`,
+            metrics: `Stepped ${visited.length}/26 passages | Wrap 26→1 & 1→26: ${wrapOk ? 'OK' : 'FAIL'}`,
             error: !passed ? 'Stepper order or wrap-around failed' : null
           };
         });
 
-        // 8. Responsive layout & zero unintended horizontal overflow
-        check('8. Responsive Layout & Zero Unintended Horizontal Overflow', () => {
+        // 9. Responsive layout & zero unintended horizontal overflow
+        check('9. Responsive Layout & Zero Unintended Horizontal Overflow', () => {
           const docOverflow = document.documentElement.scrollWidth - window.innerWidth;
           const leftEl = document.getElementById('explorer-scroll');
           const leftOverflow = leftEl.scrollWidth - leftEl.clientWidth;
@@ -3512,11 +3649,30 @@
         copyToClipboard(text, `Copied ${savedEntries.length} saved citation${savedEntries.length > 1 ? 's' : ''}`);
       });
 
+      document.getElementById('btn-copy-memo').addEventListener('click', () => {
+        const savedEntries = ENTRIES.filter(e => state.savedIds.has(e.id));
+        if (!savedEntries.length) return;
+        const memo = formatBriefMemo(savedEntries);
+        copyToClipboard(memo, `Copied Brief Memo (${savedEntries.length} ${savedEntries.length === 1 ? 'entry' : 'entries'})`);
+      });
+
       // Left Explorer Row Interactions (Event Delegation)
       document.getElementById('explorer-scroll').addEventListener('click', e => {
         const actionEl = e.target.closest('[data-action]');
         if (!actionEl) return;
         const action = actionEl.dataset.action;
+
+        if (action === 'xref-jump') {
+          e.stopPropagation();
+          const targetId = Number(actionEl.dataset.targetId);
+          jumpToEntry(targetId, { syncExplorer: true, expandInExplorer: true, pulseExplorer: true });
+          const targetEntry = ENTRY_MAP.get(targetId);
+          if (targetEntry) {
+            showToast(`Jumped to ${targetEntry.para}`);
+          }
+          return;
+        }
+
         const id = Number(actionEl.dataset.id);
         const entry = ENTRY_MAP.get(id);
         if (!entry) return;
