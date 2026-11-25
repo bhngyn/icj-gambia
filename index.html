@@ -46,6 +46,8 @@
       --cat-proof-bg: #f1f5f9; --cat-proof-text: #334155;
       --cat-intent-bg: #fce7f3; --cat-intent-text: #9d174d;
       --cat-prev-bg: #ffedd5; --cat-prev-text: #9a3412;
+      --cat-ihl-bg: #fef3c7; --cat-ihl-text: #92400e;
+      --cat-rem-bg: #dcfce7; --cat-rem-text: #166534;
 
       /* PDF & Spotlight Colors */
       --pdf-bg: #334155;
@@ -727,6 +729,8 @@
     .cat-proof { background: var(--cat-proof-bg); color: var(--cat-proof-text); }
     .cat-intent { background: var(--cat-intent-bg); color: var(--cat-intent-text); }
     .cat-prev { background: var(--cat-prev-bg); color: var(--cat-prev-text); }
+    .cat-ihl { background: var(--cat-ihl-bg); color: var(--cat-ihl-text); }
+    .cat-rem { background: var(--cat-rem-bg); color: var(--cat-rem-text); }
 
     .tier-tag {
       font-family: var(--font-mono);
@@ -1685,6 +1689,7 @@
           <button type="button" class="group-nav-pill" data-scroll-group="group-witnesses">3. Witnesses &amp; UN</button>
           <button type="button" class="group-nav-pill supporting-pill" data-scroll-group="group-intent">4. Supporting: Intent</button>
           <button type="button" class="group-nav-pill supporting-pill" data-scroll-group="group-preservation">5. Supporting: PMs &amp; Prev.</button>
+          <button type="button" class="group-nav-pill supporting-pill" data-scroll-group="group-substantive">6. IHL, Actus Reus &amp; Remedies</button>
         </nav>
 
         <!-- Search & Category Filter Toolbar -->
@@ -1706,7 +1711,7 @@
         <!-- Status & Active Filter Chips -->
         <div class="status-bar">
           <div class="status-left">
-            <span id="result-count">Showing 26 of 26 entries</span>
+            <span id="result-count">Showing 34 of 34 entries</span>
             <div id="active-chips" style="display:inline-flex;gap:5px;flex-wrap:wrap;"></div>
           </div>
           <div id="saved-export-wrap" style="display:none;gap:5px;align-items:center;">
@@ -1764,7 +1769,7 @@
           </div>
         </div>
         <div class="inspector-controls">
-          <span id="stepper-count" class="stepper-count">12 / 26</span>
+          <span id="stepper-count" class="stepper-count">12 / 34</span>
           <button id="prev-para-btn" type="button" class="insp-btn" title="Previous paragraph (ArrowLeft)">&larr; Prev</button>
           <button id="next-para-btn" type="button" class="insp-btn" title="Next paragraph (ArrowRight)">Next &rarr;</button>
           <button id="locate-explorer-btn" type="button" class="insp-btn locate-btn" title="Locate & expand in Explorer">Locate in Explorer &#8601;</button>
@@ -1859,6 +1864,16 @@
             <p style="margin:0;"><strong>Eliminating Alternative Inferences (Paras. 451–467):</strong> Courts must test whether a pattern of conduct is equally explained by counter-insurgency (paras. 451–453), forced displacement (paras. 454–462), or collective punishment (paras. 463–466). Where forces attack fleeing civilians, sink escape vessels, and mine borders rather than organizing evacuations, forced displacement <strong>supports rather than negates</strong> genocidal intent (paras. 457–460).</p>
           </div>
         </div>
+
+        <!-- Section 4: IHL Interface, Actus Reus & Erga Omnes Remedies -->
+        <div class="ref-section">
+          <h3>4. IHL Interface, Art. II(c) &amp; <em>Erga Omnes Partes</em> Remedies <span class="ref-para-badge">Paras. 296–305, 338–356, 580–626</span></h3>
+          <div class="ref-card">
+            <p style="margin:0 0 8px 0;"><strong>IHL &amp; Armed Conflict (Paras. 296–305):</strong> Compliance with IHL does not exclude conduct from the Genocide Convention, while IHL breaches (e.g., casualties/damage far in excess of military necessity) inform both <em>actus reus</em> intent and <em>dolus specialis</em>.</p>
+            <p style="margin:0 0 8px 0;"><strong>Art. II(c) "Slow Death" Bar (Paras. 338–356):</strong> "Calculated" means <strong>objectively capable</strong> of causing the slow death of at least a substantial part of the group over time (actual death not required), though the evidentiary threshold is demanding.</p>
+            <p style="margin:0;"><strong>Non-Injured State Standing for Reparation (Paras. 580–626):</strong> A non-injured State party invoking <em>erga omnes partes</em> obligations may claim cessation, guarantees of non-repetition, and <strong>full reparation (restitution and compensation) in the interest of the victim group and individuals</strong>.</p>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -1871,7 +1886,7 @@
       <div class="modal-header">
         <div>
           <div id="qa-drawer-title" class="modal-title">Live UI &amp; Functional QA Audit</div>
-          <div style="font-size:11px;color:#94a3b8;margin-top:2px;">9 automated assertions on the 26-entry Explorer &amp; Full 646-Para Judgment Sync</div>
+          <div style="font-size:11px;color:#94a3b8;margin-top:2px;">9 automated assertions on the 34-entry Explorer &amp; Full 646-Para Judgment Sync</div>
         </div>
         <button id="btn-close-qa" class="modal-close" type="button" aria-label="Close QA Drawer">&times;</button>
       </div>
@@ -1921,7 +1936,9 @@
         'Proof & Non-Co-operation',
         'Witnesses & UN Bodies',
         'Genocidal Intent & Context',
-        'Prevention / PMs / Incitement'
+        'Prevention / PMs / Incitement',
+        'IHL & Actus Reus',
+        'Standing & Remedies'
       ];
 
       const CAT_CLASS = {
@@ -1930,7 +1947,9 @@
         'Proof & Non-Co-operation': 'cat-proof',
         'Witnesses & UN Bodies': 'cat-wit',
         'Genocidal Intent & Context': 'cat-intent',
-        'Prevention / PMs / Incitement': 'cat-prev'
+        'Prevention / PMs / Incitement': 'cat-prev',
+        'IHL & Actus Reus': 'cat-ihl',
+        'Standing & Remedies': 'cat-rem'
       };
 
       const TIERS = [
@@ -2001,6 +2020,14 @@
           badge: 'Supporting',
           title: 'Provisional Measures, Prevention & Incitement',
           subtitle: '2020 evidence-preservation order, Art. III(c) hate speech, Arts. I/IV/V/VI duties & 11–4 PM breach'
+        },
+        {
+          id: 'group-substantive',
+          num: 6,
+          focus: 'supporting',
+          badge: 'Substantive Precedent',
+          title: 'IHL Interface, Actus Reus Thresholds & Erga Omnes Remedies',
+          subtitle: 'Armed-conflict/IHL interface, Art. II(a)–(d) legal tests & non-injured State standing for full reparation'
         }
       ];
 
@@ -2499,6 +2526,158 @@
           relatedIds: [1, 13, 20],
           keyPhrase: 'violated the binding 2020 Provisional Measures Order to preserve evidence',
           pdfText: 'OPERATIVE CLAUSE — By eleven votes to four, relying on post-2020 satellite and geospatial records, the Court finds that the burning and destruction of remnants of at least five Rohingya villages in May 2020 and the construction of a government base over a former village site in 2021 violated the binding 2020 Provisional Measures Order to preserve evidence.'
+        },
+        {
+          id: 27,
+          order: 27,
+          pdfPage: 100,
+          groupId: 'group-substantive',
+          para: 'Paras. 296–305',
+          shortPara: '296–305',
+          category: 'IHL & Actus Reus',
+          tier: 'Rule',
+          sourceType: 'verbatim',
+          section: 'Part IV.B • Relationship Between IHL and the Genocide Convention',
+          title: 'IHL Compliance Does Not Exclude Genocide; IHL Breaches Inform Intent',
+          oneline: 'Genocide Convention and IHL are distinct regimes; IHL compliance does not insulate conduct, while excess casualties inform intent.',
+          holding: 'The Court holds that the Genocide Convention and IHL are distinct bodies of rules pursuing different aims. Compliance with IHL does not exclude conduct from the scope of the Genocide Convention (para. 305), while non-compliance—such as attacks causing casualties and damage far in excess of military necessity—is relevant in inferring both actus reus intent and dolus specialis (paras. 303–304).',
+          takeaway: 'Directly addresses armed-conflict defenses: Respondents cannot defeat genocide claims merely by invoking IHL or military targeting, and systematic IHL violations (disproportionate/indiscriminate harm) serve as probative evidence of genocidal intent.',
+          relatedIds: [23, 24, 28],
+          keyPhrase: 'such compliance does not exclude conduct from the scope of the Genocide Convention',
+          pdfText: 'Accordingly, the Court concludes that although compliance with another body of international law, including international humanitarian law, may inform the identification of intent with respect to the actus reus of genocide, as well as genocidal intent, such compliance does not exclude conduct from the scope of the Genocide Convention.'
+        },
+        {
+          id: 28,
+          order: 28,
+          pdfPage: 103,
+          groupId: 'group-substantive',
+          para: 'Paras. 312–319',
+          shortPara: '312–319',
+          category: 'IHL & Actus Reus',
+          tier: 'Rule',
+          sourceType: 'verbatim',
+          section: 'Part V.B.1 • Actus Reus: Art. II(a) Killing',
+          title: 'Art. II(a) Killing: No Numerical Floor & "Likely Consequence" Intent',
+          oneline: 'No minimum victim count for actus reus; intentional killing includes acting with knowledge that death is a likely consequence.',
+          holding: 'Rejects any minimum numerical threshold for the actus reus under Art. II(a) (scale belongs to mens rea, paras. 316–317). Clarifies that a killing is intentional where the perpetrator meant to cause death or acted with knowledge that death was a likely consequence of the act or omission, excluding negligence or gross negligence (para. 315).',
+          takeaway: 'Establishes that widespread indiscriminate firing or strikes carried out with knowledge that civilian deaths are a likely consequence satisfy the dolus generalis of Art. II(a), without needing to prove a fixed minimum casualty count for the actus reus.',
+          relatedIds: [27, 29, 30],
+          keyPhrase: 'acted with knowledge that death was a likely consequence of the act or omission',
+          pdfText: 'In the Court’s view, a killing is intentional within the meaning of Article II (a) of the Convention where the perpetrator meant to cause the death of the victim or acted with knowledge that death was a likely consequence of the act or omission. This does not include negligence or gross negligence.'
+        },
+        {
+          id: 29,
+          order: 29,
+          pdfPage: 105,
+          groupId: 'group-substantive',
+          para: 'Paras. 320–337',
+          shortPara: '320–337',
+          category: 'IHL & Actus Reus',
+          tier: 'Rule',
+          sourceType: 'verbatim',
+          section: 'Part V.B.2 • Actus Reus: Art. II(b) Serious Bodily or Mental Harm',
+          title: 'Art. II(b) Serious Mental Harm via Forced Displacement & Home Destruction',
+          oneline: 'Displacement alone is not genocide, but displacement plus home destruction, family separation, and inability to return satisfies Art. II(b).',
+          holding: 'Serious bodily or mental harm requires a "grave and long-term disadvantage to a person’s ability to lead a normal and constructive life" (need not be permanent, para. 325). While forcible displacement does not per se constitute an actus reus, displacement coupled with appalling conditions, home destruction, family separation, and prolonged inability to return constitutes serious mental harm under Art. II(b) (paras. 328, 332–334).',
+          takeaway: 'Provides a clear legal pathway to plead mass displacement, destruction of residential areas, and protracted camp conditions under Art. II(b) even where the higher Art. II(c) "slow death" threshold is contested.',
+          relatedIds: [30, 24, 28],
+          keyPhrase: 'grave and long-term disadvantage to a person’s ability to lead a normal and constructive life',
+          pdfText: 'The Court recalls that, while forcible displacement does not in and of itself inflict serious mental harm for the purposes of the actus reus of genocide, the circumstances of such forcible displacement, taken together, can cause serious mental harm within the meaning of Article II (b).'
+        },
+        {
+          id: 30,
+          order: 30,
+          pdfPage: 109,
+          groupId: 'group-substantive',
+          para: 'Paras. 338–356',
+          shortPara: '338–356',
+          category: 'IHL & Actus Reus',
+          tier: 'Rule',
+          sourceType: 'verbatim',
+          section: 'Part V.B.3 • Actus Reus: Art. II(c) Conditions of Life',
+          title: 'Art. II(c) Conditions of Life: Objective "Slow Death" Test & Demanding Bar',
+          oneline: '"Calculated" means objectively capable of causing slow death of a substantial part over time; not met in Myanmar.',
+          holding: 'Clarifies that "calculated" in Art. II(c) does not duplicate dolus specialis; it requires conditions objectively capable of causing the slow death of at least a substantial part of the group over time (actual death not required, paras. 346–349). However, the bar is demanding: the Court found Art. II(c) not conclusively established for Myanmar’s movement/aid restrictions or acute clearance violence (paras. 352–356).',
+          takeaway: 'Crucial benchmark for humanitarian-blockade and deprivation claims: litigators must prove with objective epidemiological/humanitarian data that deprivation of food, water, shelter, and healthcare is objectively capable of causing the slow death of a substantial part of the group over time.',
+          relatedIds: [29, 28, 31],
+          keyPhrase: 'objectively capable of causing the death, over time, of at least a substantial part of the protected group',
+          pdfText: 'In sum, the material act set forth in Article II (c) prohibits a State from engaging in conduct that deliberately inflicts conditions of life that are objectively capable of causing the death, over time, of at least a substantial part of the protected group.'
+        },
+        {
+          id: 31,
+          order: 31,
+          pdfPage: 113,
+          groupId: 'group-substantive',
+          para: 'Paras. 357–371',
+          shortPara: '357–371',
+          category: 'IHL & Actus Reus',
+          tier: 'Rule',
+          sourceType: 'verbatim',
+          section: 'Part V.B.4 • Actus Reus: Art. II(d) Preventing Births',
+          title: 'Art. II(d) Preventing Births: No Demographic Decline Required',
+          oneline: 'Covers physical and psychological/cultural impediments to reproduction; actual reduction in birth rate is not required.',
+          holding: 'Holds that Art. II(d) covers measures intended to prevent births and objectively capable of doing so, including through physical injury and psychological/social trauma impacting procreation (paras. 360–362). Applicants do not need to prove that the measures actually succeeded in reducing the group’s birth rate (para. 362).',
+          takeaway: 'Removes the defense that a protected group’s population continued to grow; evidence of reproductive harm, destruction of maternal/reproductive capacity, or coercive birth-control policies can satisfy Art. II(d) without proving net demographic decline.',
+          relatedIds: [30, 21],
+          keyPhrase: 'does not require that an applicant additionally establish that the measures were actually successful in reducing the birth rate',
+          pdfText: 'Article II (d) requires an applicant to demonstrate that the measures imposed are intended to prevent births within the group and are objectively capable of doing so. The language of subparagraph (d), however, does not require that an applicant additionally establish that the measures were actually successful in reducing the birth rate of the group.'
+        },
+        {
+          id: 32,
+          order: 32,
+          pdfPage: 119,
+          groupId: 'group-intent',
+          para: 'Paras. 386–389, 438–442',
+          shortPara: '386–389, 438–442',
+          category: 'Genocidal Intent & Context',
+          tier: 'Rule',
+          sourceType: 'verbatim',
+          section: 'Part V.C.2 & V.C.4 • Establishing Genocidal Intent',
+          title: 'Holistic Inference of Intent Beyond a Strict "Pattern of Conduct"',
+          oneline: 'Genocidal intent may be inferred holistically from all evidence taken together, without requiring a prior "pattern of conduct" finding.',
+          holding: 'Rejects Myanmar’s argument that circumstantial genocidal intent can only be established through a "pattern of conduct." Holds that intent may be inferred holistically from an array of factors—context, statements, selective targeting, scale, and systematicity—taken together, provided genocidal intent is the only reasonable inference explaining the totality of the evidence (paras. 386–389, 438–442).',
+          takeaway: 'Allows litigators to combine official rhetoric, pre-conflict policies, specific atrocities, and broader operational patterns into a single holistic mens rea case rather than proving intent from each strand in isolation.',
+          relatedIds: [23, 24, 21],
+          keyPhrase: 'assess the evidence holistically in order to establish whether genocidal intent may be inferred',
+          pdfText: 'The jurisprudence of the Court and of international criminal tribunals indicates, however, that the inquiry into genocidal intent is not confined to determining whether certain factors reveal a pattern of conduct from which such intent may be inferred. Rather, genocidal intent may be inferred from an array of different factors, without necessarily requiring a prior finding that a pattern of conduct is established.'
+        },
+        {
+          id: 33,
+          order: 33,
+          pdfPage: 146,
+          groupId: 'group-preservation',
+          para: 'Paras. 489–506',
+          shortPara: '489–506',
+          category: 'Prevention / PMs / Incitement',
+          tier: 'Rule',
+          sourceType: 'verbatim',
+          section: 'Part VI.B • Direct and Public Incitement to Commit Genocide',
+          title: 'Art. III(c) Incitement: Inchoate Crime, Strict Attribution & Audience Test',
+          oneline: 'Completed upon utterance, but requires public State-attributable speech directly prompting genocide with dolus specialis.',
+          holding: 'Confirms Art. III(c) is a preventative, inchoate offense completed upon utterance regardless of whether genocide occurs (para. 496). However, it requires fully conclusive proof that State-attributable public speech directly prompted genocide with genocidal intent, and that the intended audience would understand it as such. Both Senior General Hlaing’s speeches and military Facebook posts fell short of this strict bar (paras. 502–506).',
+          takeaway: 'Sets a high bar for standalone Art. III(c) State-responsibility claims based on dehumanizing official rhetoric—reinforcing the strategic value of also pleading failure to investigate/punish incitement under Arts. I/IV/VI (para. 506) and using speeches as mens rea context (paras. 402–404).',
+          relatedIds: [22, 18, 19],
+          keyPhrase: 'direct and public incitement to commit genocide pursuant to Article III (c)',
+          pdfText: 'A State is responsible for direct and public incitement to commit genocide pursuant to Article III (c) of the Genocide Convention when a person or organ whose conduct is attributable to the State communicates in public messages that directly prompt, encourage or provoke the commission of genocide.'
+        },
+        {
+          id: 34,
+          order: 34,
+          pdfPage: 167,
+          groupId: 'group-substantive',
+          para: 'Paras. 580–626',
+          shortPara: '580–626',
+          category: 'Standing & Remedies',
+          tier: 'Rule',
+          sourceType: 'verbatim',
+          section: 'Part VII • Legal Consequences & Remedies (Erga Omnes Partes Standing)',
+          title: 'Non-Injured State Standing to Claim Full Reparation for Victims',
+          oneline: 'A non-injured State party may claim cessation, guarantees of non-repetition, and full reparation (restitution & compensation) in the interest of victims.',
+          holding: 'Landmark ruling on erga omnes partes remedies: while a non-injured State party cannot claim reparation for itself, it has standing to claim cessation, assurances/guarantees of non-repetition, and full reparation (restitution, compensation, satisfaction) in the interest of the victim group and individuals as ultimate beneficiaries (paras. 587–590, 610). Ordered Myanmar to report on restitution/compensation within 2 years, reserving a subsequent compensation phase (para. 625).',
+          takeaway: 'Directly governs South Africa’s remedial standing as a non-injured State party: confirms that an erga omnes partes Applicant can pursue comprehensive restitution, compensation, and non-repetition orders on behalf of the protected group, not merely declaratory relief.',
+          relatedIds: [25, 26],
+          keyPhrase: 'performance of the obligation of full reparation, including restitution, compensation and satisfaction',
+          pdfText: 'As a result, in the Court’s view, while The Gambia cannot seek reparation for itself, it may make a claim for the performance of the obligation of full reparation, including restitution, compensation and satisfaction, by Myanmar, in the interest of the Rohingya, as a group and as individual victims, who are the beneficiaries of the obligation breached.'
         }
       ];
 
@@ -2544,7 +2723,15 @@
         23: [443],
         24: [451, 452, 453, 454, 455, 456, 457, 458, 459, 460, 461, 462, 463, 464, 465, 466, 467],
         25: Array.from({ length: 86 }, (_, i) => 489 + i),
-        26: [646]
+        26: [646],
+        27: [296, 297, 298, 299, 300, 301, 302, 303, 304, 305],
+        28: [312, 313, 314, 315, 316, 317, 318, 319],
+        29: [320, 321, 322, 323, 324, 325, 326, 327, 328, 329, 330, 331, 332, 333, 334, 335, 336, 337],
+        30: [338, 339, 340, 341, 342, 343, 344, 345, 346, 347, 348, 349, 350, 351, 352, 353, 354, 355, 356],
+        31: [357, 358, 359, 360, 361, 362, 363, 364, 365, 366, 367, 368, 369, 370, 371],
+        32: [386, 387, 388, 389, 438, 439, 440, 441, 442],
+        33: [489, 490, 491, 492, 493, 494, 495, 496, 497, 498, 499, 500, 501, 502, 503, 504, 505, 506],
+        34: Array.from({ length: 47 }, (_, i) => 580 + i)
       };
 
       const PARA_TO_PRIMARY_ENTRY = new Map();
@@ -3515,7 +3702,7 @@
         }
 
         // 1. Full 646-paragraph Judgment & 26-entry registry integrity
-        check('1. Full 646-Para Judgment & 26-Entry Registry Integrity', () => {
+        check('1. Full 646-Para Judgment & 34-Entry Registry Integrity', () => {
           const validTiers = new Set(['T1', 'T2', 'T3', 'T4', 'Rule']);
           const validCats = new Set(CATEGORIES.slice(1));
           const missingPdf = [];
@@ -3526,10 +3713,10 @@
           });
           const renderedParas = document.querySelectorAll('.pdf-para[data-para-num]').length;
           const pageCount = document.querySelectorAll('.icj-page').length;
-          const passed = ENTRIES.length === 26 && renderedParas === 646 && missingPdf.length === 0 && invalidMeta.length === 0;
+          const passed = ENTRIES.length === 34 && renderedParas === 646 && missingPdf.length === 0 && invalidMeta.length === 0;
           return {
             passed,
-            metrics: `Full Judgment: ${renderedParas}/646 paras across ${pageCount} A4 pages | Curated mapped: ${26 - missingPdf.length}/26`,
+            metrics: `Full Judgment: ${renderedParas}/646 paras across ${pageCount} A4 pages | Curated mapped: ${34 - missingPdf.length}/34`,
             error: !passed ? `Missing PDF: ${missingPdf.join(', ')} | Paras: ${renderedParas}/646` : null
           };
         });
@@ -3590,7 +3777,7 @@
         });
 
         // 5. Cross-Reference Chip Resolution (Gambia v. Myanmar Only)
-        check('5. Cross-Reference Chip Resolution (26-Entry Graph)', () => {
+        check('5. Cross-Reference Chip Resolution (34-Entry Graph)', () => {
           const brokenRefs = [];
           let totalRefs = 0;
           ENTRIES.forEach(e => {
@@ -3623,7 +3810,7 @@
           return {
             passed,
             metrics: `T1=${t1Count} (exp 7) | T4=${t4Count} (exp 3) | OSINT & Digital=${osintCount} (exp 4) | Search "UNOSAT"=${searchHits.length} hit`,
-            error: !passed ? 'One or more filter/search counts deviated from expected 26-entry totals' : null
+            error: !passed ? 'One or more filter/search counts deviated from expected 34-entry totals' : null
           };
         });
 
@@ -3648,7 +3835,7 @@
         });
 
         // 8. Prev/Next stepper wrap-around across all 26 passages
-        check('8. Prev/Next Stepper Wrap-Around Across All 26 Passages', () => {
+        check('8. Prev/Next Stepper Wrap-Around Across All 34 Passages', () => {
           state.savedOnly = false;
           jumpToEntry(CHRONO_ENTRIES[0].id, { syncExplorer: false, smooth: false });
           const visited = [state.activeEntryId];
@@ -3659,10 +3846,10 @@
           const wrappedBack = stepChronoEntry(-1, { syncExplorer: false, smooth: false });
           const seqOk = visited.every((id, idx) => id === CHRONO_ENTRIES[idx].id);
           const wrapOk = wrappedFwd === CHRONO_ENTRIES[0].id && wrappedBack === CHRONO_ENTRIES[CHRONO_ENTRIES.length - 1].id;
-          const passed = visited.length === 26 && seqOk && wrapOk;
+          const passed = visited.length === 34 && seqOk && wrapOk;
           return {
             passed,
-            metrics: `Stepped ${visited.length}/26 passages | Wrap 26→1 & 1→26: ${wrapOk ? 'OK' : 'FAIL'}`,
+            metrics: `Stepped ${visited.length}/34 passages | Wrap 34→1 & 1→34: ${wrapOk ? 'OK' : 'FAIL'}`,
             error: !passed ? 'Stepper order or wrap-around failed' : null
           };
         });
